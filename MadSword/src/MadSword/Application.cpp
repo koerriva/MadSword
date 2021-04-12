@@ -6,9 +6,6 @@ namespace MadSword {
 	Application::~Application(){}
 
 	void Application::Run() {
-		while (true)
-		{
-			printf("I'm here");
-		}
+		while (true);
 	}
 }
