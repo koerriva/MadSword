@@ -1,10 +1,16 @@
 workspace "MadSword"
     architecture "x86_64"
+    startproject "Sandbox"
 
     configurations{
         "Debug",
         "Release",
         "Dist"
+    }
+
+    flags
+    {
+        "MultiProcessorCompile"
     }
 
 --临时变量 定义 输出目录
