@@ -25,6 +25,9 @@ project "MadSword" --项目名称
     targetdir("bin/" .. outputdir .. "/%{prj.name}")--输出目录
     objdir("bin-int/" .. outputdir .. "/%{prj.name}")--中间临时文件
 
+    pchheader "mspch.h"
+    pchsource "MadSword/src/mspch.cpp"
+
     files--该项目的文件
     {
         "%{prj.name}/src/**.h",
@@ -33,6 +36,7 @@ project "MadSword" --项目名称
 
     includedirs --包含目录
     {
+        "%{prj.name}/src",
         "%{prj.name}/vendor/spdlog/include"
     }
 

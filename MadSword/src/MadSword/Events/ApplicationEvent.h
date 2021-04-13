@@ -3,11 +3,11 @@
 #include "Event.h"
 
 namespace MadSword {
-	class WindowResizeEvent :public Event {
+	class MS_API WindowResizeEvent :public Event {
 	public:
 		WindowResizeEvent(unsigned int width,unsigned int height):m_Width(width),m_Height(height){}
-		unsigned int GetWidth() const { return m_Width; }
-		unsigned int GetHeight() const { return m_Height; }
+		inline unsigned int GetWidth() const { return m_Width; }
+		inline unsigned int GetHeight() const { return m_Height; }
 
 		std::string ToString() const override {
 			std::stringstream ss;
@@ -21,7 +21,7 @@ namespace MadSword {
 		unsigned int m_Width, m_Height;
 	};
 
-	class WindowCloseEvent :public Event {
+	class MS_API WindowCloseEvent :public Event {
 	public:
 		WindowCloseEvent() = default;
 
@@ -29,7 +29,7 @@ namespace MadSword {
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
 
-	class AppTickEvent :public Event {
+	class MS_API AppTickEvent :public Event {
 	public:
 		AppTickEvent() = default;
 
@@ -37,7 +37,7 @@ namespace MadSword {
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
 
-	class AppUpdateEvent :public Event {
+	class MS_API AppUpdateEvent :public Event {
 	public:
 		AppUpdateEvent() = default;
 
@@ -45,7 +45,7 @@ namespace MadSword {
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
 
-	class AppRenderEvent :public Event {
+	class MS_API AppRenderEvent :public Event {
 	public:
 		AppRenderEvent() = default;
 

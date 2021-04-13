@@ -2,7 +2,7 @@
 #include "Event.h"
 
 namespace MadSword {
-	class MouseMovedEvent :public Event {
+	class MS_API MouseMovedEvent :public Event {
 	public:
 		MouseMovedEvent(const float x, const float y) :m_MouseX(x), m_MouseY(y) {};
 		float GetX() const { return m_MouseX; }
@@ -18,7 +18,7 @@ namespace MadSword {
 		float m_MouseX, m_MouseY;
 	};
 
-	class MouseScrolledEvent :public Event {
+	class MS_API MouseScrolledEvent :public Event {
 	public:
 		MouseScrolledEvent(const float x, const float y) :m_OffsetX(x), m_OffsetY(y) {};
 		float GetX() const { return m_OffsetX; }
@@ -34,7 +34,7 @@ namespace MadSword {
 		float m_OffsetX, m_OffsetY;
 	};
 
-	class MouseButtonEvent :public Event {
+	class MS_API MouseButtonEvent :public Event {
 	public:
 		inline int GetMouseButton() const { return m_Button; }
 
@@ -44,7 +44,7 @@ namespace MadSword {
 		int m_Button;
 	};
 
-	class MouseButtonPressedEvent :public MouseButtonEvent {
+	class MS_API MouseButtonPressedEvent :public MouseButtonEvent {
 	public:
 		MouseButtonPressedEvent(const int button):MouseButtonEvent(button){}
 		std::string ToString() const override {
@@ -55,7 +55,7 @@ namespace MadSword {
 		EVENT_CLASS_TYPE(MouseButtonPressed)
 	};
 
-	class MouseButtonReleasedEvent :public MouseButtonEvent {
+	class MS_API MouseButtonReleasedEvent :public MouseButtonEvent {
 	public:
 		MouseButtonReleasedEvent(const int button):MouseButtonEvent(button){}
 		std::string ToString() const override {
