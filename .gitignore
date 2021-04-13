@@ -1,8 +1,12 @@
-# Directories
-**bin/
-**bin-int/
+# 代理
+# git config --global https.proxy http://127.0.0.1:1080
+# git config --global https.proxy https://127.0.0.1:1080
 
-# Files
+# 目录
+bin/
+bin-int/
+
+# 文件
 *.user
 *imgui.ini
 
