@@ -11,3 +11,11 @@
 #endif // !MS_PLATFORM_WINDOWS
 
 #define BIT(x) (1<<x)
+
+#ifdef MS_ENABLE_ASSERTS
+#define MS_ASSERT(x, ...) { if(!(x)) { MS_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
+#define MS_CORE_ASSERT(x, ...) { if(!(x)) { MS_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
+#else
+#define MS_ASSERT(x, ...)
+#define MS_CORE_ASSERT(x, ...)
+#endif

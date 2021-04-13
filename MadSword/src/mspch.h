@@ -15,3 +15,5 @@
 #ifdef MS_PLATFORM_WINDOWS
 #include <Windows.h>
 #endif
+
+#include "MadSword/Log.h"

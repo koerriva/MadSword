@@ -37,7 +37,14 @@ project "MadSword" --项目名称
     includedirs --包含目录
     {
         "%{prj.name}/src",
-        "%{prj.name}/vendor/spdlog/include"
+        "%{prj.name}/vendor/spdlog/include",
+        "%{prj.name}/vendor/glfw/include"
+    }
+
+    links
+    {
+        "glfw",
+        "opengl32.lib"
     }
 
     filter "system:windows" --windows平台配置
@@ -49,6 +56,7 @@ project "MadSword" --项目名称
         {
             "MS_BUILD_DLL",
             "MS_PLATFORM_WINDOWS",
+            "MS_ENABLE_ASSERTS",
             "_WINDLL",
             "_UNICODE",
             "UNICODE",
