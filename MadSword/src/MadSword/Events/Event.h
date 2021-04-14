@@ -28,7 +28,6 @@ namespace MadSword {
 #define EVENT_CLASS_CATEGORY(category) virtual int GetCategoryFlags() const override { return category; }
 
 	class MS_API Event {
-		friend class EventDispatcher;
 	public:
 		virtual ~Event() = default;
 
@@ -37,7 +36,7 @@ namespace MadSword {
 		virtual int GetCategoryFlags() const = 0;
 		virtual std::string ToString() const { return GetName(); }
 
-		inline bool IsInCategory(EventCategory category) {
+		inline virtual bool IsInCategory(EventCategory category) {
 			return GetCategoryFlags() & category;
 		}
 	protected:
@@ -53,7 +52,7 @@ namespace MadSword {
 		template<typename T>
 		bool Dispatch(EventFn<T> func) {
 			if (m_Event.GetEventType() == T::GetStaticType()) {
-				m_Event.m_Handled |= func(static_cast<T&>(m_Event));
+				m_Event.m_Handled = func(*(T*)&m_Event);
 				return true;
 			}
 			return false;
@@ -62,7 +61,7 @@ namespace MadSword {
 		Event& m_Event;
 	};
 
-	inline std::ostream& operator<<(std::ostream& os,const Event& e) {
+	inline std::ostream& operator<<(std::ostream& os, const Event& e) {
 		return os << e.ToString();
 	}
 }
