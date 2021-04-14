@@ -1,5 +1,8 @@
 #include "mspch.h"
 #include "WindowsWindow.h"
+#include <MadSword/Events/ApplicationEvent.h>
+#include <MadSword/Events/KeyEvent.h>
+#include <MadSword/Events/MouseEvent.h>
 //#include "MadSword/Core.h"
 
 namespace MadSword {
@@ -50,6 +53,85 @@ namespace MadSword {
         glfwSetWindowUserPointer(m_Window, &m_Data);
         SetVSync(true);
 
+        glfwSetWindowPosCallback(m_Window, [](GLFWwindow* window, int x, int y) {
+            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            WindowMovedEvent event(x, y);
+            data.EventCallback(event);
+            });
+        glfwSetWindowFocusCallback(m_Window, [](GLFWwindow* window, int focused) {
+            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            if (focused==GLFW_TRUE) {
+                WindowFocusEvent event;
+                data.EventCallback(event);
+            }
+            else {
+                WindowLostFocusEvent event;
+                data.EventCallback(event);
+            }
+            });
+        glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
+            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            data.Width = width;
+            data.Height = height;
+            WindowResizeEvent event(width,height);
+            data.EventCallback(event);
+            });
+        glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window) {
+            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            WindowCloseEvent event;
+            data.EventCallback(event);
+            });
+        glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int keycode,int scancode, int action, int mods) {
+            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            switch (action)
+            {
+            case GLFW_PRESS: {
+                KeyPressedEvent event(keycode, 0);
+                data.EventCallback(event);
+                break;
+            }
+            case GLFW_RELEASE: {
+                KeyReleasedEvent event(keycode);
+                data.EventCallback(event);
+                break;
+            }
+            case GLFW_REPEAT: {
+                KeyPressedEvent event(keycode, 2);
+                data.EventCallback(event);
+                break;
+            }
+            default:
+                break;
+            }
+            });
+        glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window,int btn,int action,int mods) {
+            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            switch (action)
+            {
+            case GLFW_PRESS: {
+                MouseButtonPressedEvent event(btn);
+                data.EventCallback(event);
+                break;
+            }
+            case GLFW_RELEASE: {
+                MouseButtonReleasedEvent event(btn);
+                data.EventCallback(event);
+                break;
+            }
+            default:
+                break;
+            }
+            });
+        glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xoffset, double yoffset) {
+            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            MouseScrolledEvent event(xoffset, yoffset);
+            data.EventCallback(event);
+            });
+        glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double x,double y) {
+            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            MouseMovedEvent event(x, y);
+            data.EventCallback(event);
+            });
     }
     void WindowsWindow::Shutdown()
     {
