@@ -18,10 +18,10 @@ namespace MadSword {
 	void Application::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
-		dispatcher.Dispatch<WindowCloseEvent>(EVENT_BIND_FUNCTION(Application::OnWindowCloseEvent));
+		dispatcher.Dispatch<WindowCloseEvent>(EVENT_BIND_FUNCTION(Application::OnWindowClose));
 		MS_TRACE(e);
 	}
-	bool Application::OnWindowCloseEvent(WindowCloseEvent& e)
+	bool Application::OnWindowClose(WindowCloseEvent& e)
 	{
 		m_Running = false;
 		return true;
