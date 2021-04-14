@@ -17,6 +17,11 @@ workspace "MadSword"
 --详细的所有支持的tokens
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+IncludeDir = {}
+IncludeDir["glfw"] = "MadSword/vendor/glfw/include"
+
+include "MadSword/vendor/glfw"
+
 project "MadSword" --项目名称
     location "MadSword" --相对路径
     kind "SharedLib"    --表明该项目是dll动态库

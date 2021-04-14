@@ -16,7 +16,9 @@ namespace MadSword {
 	public:
 		using EventCallbackFn = std::function<void(Event&)>;
 
-		virtual ~Window() = 0;
+		virtual ~Window() {
+			MS_CORE_TRACE("Window close");
+		};
 		virtual void OnUpdate() = 0;
 		virtual unsigned int GetWidth() const = 0;
 		virtual unsigned int GetHeight() const = 0;
