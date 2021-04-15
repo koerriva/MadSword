@@ -21,6 +21,11 @@ namespace MadSword {
     }
     void WindowsWindow::OnUpdate()
     {
+        {
+            glViewport(0, 0, m_Data.Width, m_Data.Height);
+            glClearColor(0.2, 0.3, 0.1, 1.0);
+            glClear(GL_COLOR_BUFFER_BIT);
+        }
         glfwPollEvents();
         glfwSwapBuffers(m_Window);
     }
@@ -52,6 +57,9 @@ namespace MadSword {
         glfwMakeContextCurrent(m_Window);
         glfwSetWindowUserPointer(m_Window, &m_Data);
         SetVSync(true);
+
+        int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+        MS_CORE_ASSERT(status, "Glad≥ı ºªØ ß∞‹");
 
         glfwSetWindowPosCallback(m_Window, [](GLFWwindow* window, int x, int y) {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);

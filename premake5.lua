@@ -19,8 +19,10 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
 IncludeDir["glfw"] = "MadSword/vendor/glfw/include"
+IncludeDir["glad"] = "MadSword/vendor/glad/include"
 
 include "MadSword/vendor/glfw"
+include "MadSword/vendor/glad"
 
 project "MadSword" --项目名称
     location "MadSword" --相对路径
@@ -43,12 +45,14 @@ project "MadSword" --项目名称
     {
         "%{prj.name}/src",
         "%{prj.name}/vendor/spdlog/include",
-        "%{prj.name}/vendor/glfw/include"
+        "%{prj.name}/vendor/glfw/include",
+        "%{prj.name}/vendor/glad/include"
     }
 
     links
     {
         "glfw",
+        "glad",
         "opengl32.lib"
     }
 
@@ -62,6 +66,7 @@ project "MadSword" --项目名称
             "MS_BUILD_DLL",
             "MS_PLATFORM_WINDOWS",
             "MS_ENABLE_ASSERTS",
+            "GLFW_INCLUDE_NONE",
             "_WINDLL",
             "_UNICODE",
             "UNICODE",
