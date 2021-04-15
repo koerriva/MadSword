@@ -2,13 +2,13 @@
 
 class DebugLayer : public MadSword::Layer {
 public:
-	DebugLayer(const std::string& name = "DebugLayer") {};
+	DebugLayer():Layer("DebugLayer"){};
 	void OnUpdate() override {
 		MS_TRACE("DebugLayer:Update");
 	}
 
 	void OnEvent(MadSword::Event& e) override {
-		MS_INFO(e);
+		MS_INFO("DebugLayer:Event {}", e);
 	}
 };
 

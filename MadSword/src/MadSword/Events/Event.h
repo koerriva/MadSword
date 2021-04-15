@@ -1,6 +1,7 @@
 #pragma once
 #include "mspch.h"
 #include "MadSword/Core.h"
+#include "spdlog/fmt/ostr.h"
 
 namespace MadSword {
 
@@ -34,16 +35,23 @@ namespace MadSword {
 		virtual EventType GetEventType() const = 0;
 		virtual const char* GetName() const = 0;
 		virtual int GetCategoryFlags() const = 0;
-		virtual std::string ToString() const { return GetName(); }
+		virtual std::string ToString() const { 
+			return GetName(); 
+		}
 
 		inline virtual bool IsInCategory(EventCategory category) {
 			return GetCategoryFlags() & category;
+		}
+		
+		template<typename Ostream>
+		friend Ostream& operator<<(Ostream& os, const Event& e) {
+			return os << e.ToString();
 		}
 
 		bool m_Handled = false;
 	};
 
-	class EventDispatcher {
+	class MS_API EventDispatcher {
 		template<typename T>
 		using EventFn = std::function<bool(T&)>;
 	public:
@@ -60,8 +68,4 @@ namespace MadSword {
 	private:
 		Event& m_Event;
 	};
-
-	inline std::ostream& operator<<(std::ostream& os, const Event& e) {
-		return os << e.ToString();
-	}
 }

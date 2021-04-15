@@ -130,15 +130,18 @@ project "Sandbox"
         filter "configurations:Debug"
             defines "MS_DEBUG"
             runtime "Debug"
+            buildoptions "/MDd"
             symbols "on"
         
         filter "configurations:Release"
             defines "MS_RELEASE"
             runtime "Release"
+            buildoptions "/MD"
             optimize "on"
         
         filter "configurations:Dist"
             defines "MS_DIST"
             runtime "Release"
+            buildoptions "/MD"
             optimize "on"
         

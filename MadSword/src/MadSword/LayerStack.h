@@ -1,6 +1,7 @@
 #pragma once
-#include "Layer.h"
+
 #include <mspch.h>
+#include "Layer.h"
 
 namespace MadSword {
 	class MS_API LayerStack {

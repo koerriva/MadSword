@@ -23,9 +23,9 @@ namespace MadSword {
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(EVENT_BIND_FUNCTION(Application::OnWindowClose));
-		//MS_TRACE(e);
+		MS_CORE_TRACE(e);
 		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();) {
-			(*(--it))->OnEvent(e);
+			(*--it)->OnEvent(e);
 			if (e.m_Handled) {
 				break;
 			}

@@ -16,7 +16,7 @@ namespace MadSword {
 		}
 
 		EVENT_CLASS_TYPE(WindowMoved)
-			EVENT_CLASS_CATEGORY(EventCategoryApplication)
+		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	private:
 		unsigned int m_X, m_Y;
 	};
@@ -64,7 +64,7 @@ namespace MadSword {
 		}
 
 		EVENT_CLASS_TYPE(WindowFocus)
-			EVENT_CLASS_CATEGORY(EventCategoryApplication)
+		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
 
 	class MS_API WindowLostFocusEvent :public Event {
@@ -78,7 +78,7 @@ namespace MadSword {
 		}
 
 		EVENT_CLASS_TYPE(WindowLostFocus)
-			EVENT_CLASS_CATEGORY(EventCategoryApplication)
+		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
 
 	class MS_API AppTickEvent :public Event {
@@ -102,6 +102,6 @@ namespace MadSword {
 		AppRenderEvent() = default;
 
 		EVENT_CLASS_TYPE(AppRender)
-			EVENT_CLASS_CATEGORY(EventCategoryApplication)
+		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
 }
