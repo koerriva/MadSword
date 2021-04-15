@@ -20,9 +20,11 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 IncludeDir = {}
 IncludeDir["glfw"] = "MadSword/vendor/glfw/include"
 IncludeDir["glad"] = "MadSword/vendor/glad/include"
+IncludeDir["imgui"] = "MadSword/vendor/imgui"
 
 include "MadSword/vendor/glfw"
 include "MadSword/vendor/glad"
+include "MadSword/vendor/imgui"
 
 project "MadSword" --项目名称
     location "MadSword" --相对路径
@@ -46,13 +48,15 @@ project "MadSword" --项目名称
         "%{prj.name}/src",
         "%{prj.name}/vendor/spdlog/include",
         "%{prj.name}/vendor/glfw/include",
-        "%{prj.name}/vendor/glad/include"
+        "%{prj.name}/vendor/glad/include",
+        "%{IncludeDir.imgui}"
     }
 
     links
     {
         "glfw",
         "glad",
+        "imgui",
         "opengl32.lib"
     }
 

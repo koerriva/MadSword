@@ -4,3 +4,6 @@
 [submodule "MadSword/vendor/glfw"]
 	path = MadSword/vendor/glfw
 	url = https://github.com/koerriva/glfw
+[submodule "MadSword/vendor/imgui"]
+	path = MadSword/vendor/imgui
+	url = https://github.com/koerriva/imgui
