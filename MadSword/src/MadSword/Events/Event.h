@@ -1,7 +1,6 @@
 #pragma once
 #include "mspch.h"
 #include "MadSword/Core.h"
-#include "spdlog/fmt/ostr.h"
 
 namespace MadSword {
 
