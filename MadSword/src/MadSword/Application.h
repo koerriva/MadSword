@@ -4,6 +4,7 @@
 #include "Events/Event.h"
 #include "Events/ApplicationEvent.h"
 #include "Window.h"
+#include <MadSword/LayerStack.h>
 
 namespace MadSword {
 #define EVENT_BIND_FUNCTION(fn) std::bind(&fn,this,std::placeholders::_1)
@@ -16,10 +17,15 @@ namespace MadSword {
 		virtual ~Application();
 		void Run();
 		void OnEvent(Event& e);
+
+		void PushLayer(Layer* layer);
+		void PushOverlay(Layer* overlay);
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
 		std::unique_ptr<Window> m_Window;
 		bool m_Running = true;
+
+		LayerStack m_LayerStack;
 	};
 
 	Application* CreateApplication();

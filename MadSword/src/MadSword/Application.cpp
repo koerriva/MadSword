@@ -10,8 +10,12 @@ namespace MadSword {
 	Application::~Application(){}
 
 	void Application::Run() {
-
 		while (m_Running) {
+			for each (Layer * layer in m_LayerStack)
+			{
+				layer->OnUpdate();
+			}
+
 			m_Window->OnUpdate();
 		}
 	}
@@ -19,7 +23,21 @@ namespace MadSword {
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(EVENT_BIND_FUNCTION(Application::OnWindowClose));
-		MS_TRACE(e);
+		//MS_TRACE(e);
+		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();) {
+			(*(--it))->OnEvent(e);
+			if (e.m_Handled) {
+				break;
+			}
+		}
+	}
+	void Application::PushLayer(Layer* layer)
+	{
+		m_LayerStack.PushLayer(layer);
+	}
+	void Application::PushOverlay(Layer* overlay)
+	{
+		m_LayerStack.PushOverlay(overlay);
 	}
 	bool Application::OnWindowClose(WindowCloseEvent& e)
 	{

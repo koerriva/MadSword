@@ -28,7 +28,6 @@ namespace MadSword {
 #define EVENT_CLASS_CATEGORY(category) virtual int GetCategoryFlags() const override { return category; }
 
 	class MS_API Event {
-		friend class EventDispatcher;
 	public:
 		virtual ~Event() = default;
 
@@ -40,7 +39,7 @@ namespace MadSword {
 		inline virtual bool IsInCategory(EventCategory category) {
 			return GetCategoryFlags() & category;
 		}
-	protected:
+
 		bool m_Handled = false;
 	};
 

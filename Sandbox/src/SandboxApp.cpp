@@ -1,5 +1,16 @@
 #include <MadSword.h>
-#include <MadSword/EntryPoint.h>
+
+class DebugLayer : public MadSword::Layer {
+public:
+	DebugLayer(const std::string& name = "DebugLayer") {};
+	void OnUpdate() override {
+		MS_TRACE("DebugLayer:Update");
+	}
+
+	void OnEvent(MadSword::Event& e) override {
+		MS_INFO(e);
+	}
+};
 
 class Sandbox : public MadSword::Application {
 public:
@@ -9,6 +20,12 @@ public:
 		MS_WARN("Sandbox startup");
 		MS_ERROR("Sandbox startup");
 		MS_CRITICAL("Sandbox startup");
+
+		PushLayer(new DebugLayer());
+	}
+
+	~Sandbox() {
+
 	}
 };
 

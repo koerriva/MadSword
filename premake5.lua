@@ -75,11 +75,19 @@ project "MadSword" --项目名称
     filter "configurations:Debug"
         defines "MS_DEBUG"
         runtime "Debug"
+        buildoptions "/MDd"
         symbols "on"
     
     filter "configurations:Release"
         defines "MS_RELEASE"
         runtime "Release"
+        buildoptions "/MD"
+        optimize "on"
+
+    filter "configurations:Dist"
+        defines "MS_RELEASE"
+        runtime "Release"
+        buildoptions "/MD"
         optimize "on"
 
 project "Sandbox"
