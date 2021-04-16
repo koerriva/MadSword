@@ -32,6 +32,7 @@ project "MadSword" --项目名称
     location "MadSword" --相对路径
     kind "SharedLib"    --表明该项目是dll动态库
     language "c++"
+    staticruntime "off"
 
     targetdir("bin/" .. outputdir .. "/%{prj.name}")--输出目录
     objdir("bin-int/" .. outputdir .. "/%{prj.name}")--中间临时文件
@@ -67,7 +68,6 @@ project "MadSword" --项目名称
 
     filter "system:windows" --windows平台配置
         cppdialect "c++17"
-        staticruntime "On"
         systemversion "latest"
 
         defines --预编译宏
@@ -90,25 +90,23 @@ project "MadSword" --项目名称
     filter "configurations:Debug"
         defines "MS_DEBUG"
         runtime "Debug"
-        buildoptions "/MDd"
         symbols "on"
     
     filter "configurations:Release"
         defines "MS_RELEASE"
         runtime "Release"
-        buildoptions "/MD"
         optimize "on"
 
     filter "configurations:Dist"
         defines "MS_RELEASE"
         runtime "Release"
-        buildoptions "/MD"
         optimize "on"
 
 project "Sandbox"
         location "Sandbox"
         kind "ConsoleApp"
         language "c++"
+        staticruntime "off"
 
         targetdir("bin/" .. outputdir .. "/%{prj.name}")--输出目录
         objdir("bin-int/" .. outputdir .. "/%{prj.name}")--中间临时文件
@@ -146,18 +144,15 @@ project "Sandbox"
         filter "configurations:Debug"
             defines "MS_DEBUG"
             runtime "Debug"
-            buildoptions "/MDd"
             symbols "on"
         
         filter "configurations:Release"
             defines "MS_RELEASE"
             runtime "Release"
-            buildoptions "/MD"
             optimize "on"
         
         filter "configurations:Dist"
             defines "MS_DIST"
             runtime "Release"
-            buildoptions "/MD"
             optimize "on"
         
