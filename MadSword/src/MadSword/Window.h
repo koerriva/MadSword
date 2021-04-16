@@ -22,7 +22,9 @@ namespace MadSword {
 		virtual void OnUpdate() = 0;
 		virtual unsigned int GetWidth() const = 0;
 		virtual unsigned int GetHeight() const = 0;
-		virtual void ClearFrameBuffer() = 0;
+		virtual unsigned int GetFramebufferWidth() const = 0;
+		virtual unsigned int GetFramebufferHeight() const = 0;
+		virtual void ClearFramebuffer() = 0;
 
 		virtual void* GetNativeWindow() = 0;
 

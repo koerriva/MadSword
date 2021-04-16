@@ -14,10 +14,13 @@ namespace MadSword {
 		virtual ~WindowsWindow();
 
 		void OnUpdate() override;
-		void ClearFrameBuffer() override;
+		void ClearFramebuffer() override;
 
 		inline unsigned int GetWidth() const override { return m_Data.Width; }
 		inline unsigned int GetHeight() const override { return m_Data.Height; }
+		inline unsigned int GetFramebufferWidth() const override { return m_Data.FramebufferWidth; }
+		inline unsigned int GetFramebufferHeight() const override { return m_Data.FramebufferHeight; }
+
 		void* GetNativeWindow() override { return (void*)glfwGetWin32Window(m_Window); }
 
 		inline void SetEventCallback(const EventCallbackFn& callback) { m_Data.EventCallback = callback; }
@@ -32,7 +35,7 @@ namespace MadSword {
 		struct WindowData {
 			std::string Title;
 			unsigned int Width, Height;
-			unsigned int fbWidth, fbHeight;
+			unsigned int FramebufferWidth, FramebufferHeight;
 			float xscale, yscale;
 			bool VSync;
 			EventCallbackFn EventCallback;

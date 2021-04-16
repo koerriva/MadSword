@@ -24,7 +24,7 @@ namespace MadSword {
         glfwPollEvents();
         glfwSwapBuffers(m_Window);
     }
-    void WindowsWindow::ClearFrameBuffer()
+    void WindowsWindow::ClearFramebuffer()
     {
         glViewport(0, 0, m_Data.Width, m_Data.Height);
         glClearColor(0.2, 0.3, 0.1, 1.0);
@@ -54,8 +54,16 @@ namespace MadSword {
         }
 
         m_Window = glfwCreateWindow(props.Width, props.Height, props.Title.c_str(), nullptr, nullptr);
-
         glfwMakeContextCurrent(m_Window);
+        int fw, fh;
+        glfwGetFramebufferSize(m_Window, &fw, &fh);
+        m_Data.FramebufferWidth = fw;
+        m_Data.FramebufferHeight = fh;
+        float xs, ys;
+        glfwGetWindowContentScale(m_Window, &xs, &ys);
+        m_Data.xscale = xs;
+        m_Data.yscale = ys;
+
         glfwSetWindowUserPointer(m_Window, &m_Data);
         SetVSync(true);
 
@@ -82,11 +90,17 @@ namespace MadSword {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
             data.Width = width;
             data.Height = height;
+
+            int fw, fh;
+            glfwGetFramebufferSize(window, &fw, &fh);
+            data.FramebufferWidth = fw;
+            data.FramebufferHeight = fh;
             float xs, ys;
             glfwGetWindowContentScale(window, &xs, &ys);
             data.xscale = xs;
             data.yscale = ys;
-            WindowResizeEvent event(width,height,xs,ys);
+
+            WindowResizeEvent event(width,height,data.xscale,data.yscale);
             data.EventCallback(event);
             });
         glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window) {

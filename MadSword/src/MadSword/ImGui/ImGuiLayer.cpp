@@ -22,7 +22,7 @@ namespace MadSword {
 			io.Fonts->GetGlyphRangesDefault());
 		ImFontConfig fontConf;
 		fontConf.OversampleH = 2;
-		io.Fonts->AddFontFromFileTTF("data/fonts/LiHeiPro.ttf", 16,&fontConf,
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("data/fonts/LiHeiPro.ttf", 16,&fontConf,
 			io.Fonts->GetGlyphRangesChineseSimplifiedCommon());
 		io.Fonts->AddFontFromFileTTF("data/fonts/NotoSansSC.otf", 16, &fontConf,
 			io.Fonts->GetGlyphRangesChineseSimplifiedCommon());
@@ -67,7 +67,8 @@ namespace MadSword {
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		Application& app = Application::Instance();
-		io.DisplaySize = ImVec2(app.GetWindow().GetWidth(), app.GetWindow().GetHeight());
+		Window& window = app.GetWindow();
+		io.DisplaySize = ImVec2(window.GetWidth(), window.GetHeight());
 
 		float time = (float)glfwGetTime();
 		io.DeltaTime = m_Time > 0.0 ? (time - m_Time) : (1.0f / 60.0f);
@@ -163,7 +164,6 @@ namespace MadSword {
 		MS_TRACE("{0},{1}", GetName(), event);
 		ImGuiIO& io = ImGui::GetIO();
 		io.DisplaySize = ImVec2(event.GetWidth(),event.GetHeight());
-		io.DisplayFramebufferScale = ImVec2(event.GetXScale(),event.GetYScale());
 		return false;
 	}
 }

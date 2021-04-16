@@ -15,7 +15,7 @@ namespace MadSword {
 
 	void Application::Run() {
 		while (m_Running) {
-			m_Window->ClearFrameBuffer();
+			m_Window->ClearFramebuffer();
 
 			for each (Layer * layer in m_LayerStack)
 			{
