@@ -9,7 +9,7 @@ namespace MadSword {
 		MS_CORE_ASSERT(!s_Instance, "程序实例已存在");
 		s_Instance = this;
 		m_Window = std::unique_ptr<Window>(Window::Create());
-		m_Window->SetEventCallback(EVENT_BIND_FUNCTION(Application::OnEvent));
+		m_Window->SetEventCallback(MS_BIND_EVENT_FN(Application::OnEvent));
 	}
 	Application::~Application(){}
 
@@ -28,7 +28,7 @@ namespace MadSword {
 	void Application::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
-		dispatcher.Dispatch<WindowCloseEvent>(EVENT_BIND_FUNCTION(Application::OnWindowClose));
+		dispatcher.Dispatch<WindowCloseEvent>(MS_BIND_EVENT_FN(Application::OnWindowClose));
 		//MS_CORE_TRACE(e);
 		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();) {
 			(*--it)->OnEvent(e);

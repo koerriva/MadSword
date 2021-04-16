@@ -19,3 +19,6 @@
 #define MS_ASSERT(x, ...)
 #define MS_CORE_ASSERT(x, ...)
 #endif
+
+#define MS_BIND_EVENT_FN(fn) std::bind(&fn,this,std::placeholders::_1)
+//#define MS_BIND_EVENT_FN(fn) [&](auto& EventFunc){ this->fn(EventFunc); }

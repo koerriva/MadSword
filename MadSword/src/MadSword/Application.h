@@ -7,9 +7,6 @@
 #include <MadSword/LayerStack.h>
 
 namespace MadSword {
-#define EVENT_BIND_FUNCTION(fn) std::bind(&fn,this,std::placeholders::_1)
-//#define EVENT_BIND_FUNCTION(fn) [&](auto& EventFunc){ this->fn(EventFunc); }
-
 	class MS_API Application
 	{
 	public:
