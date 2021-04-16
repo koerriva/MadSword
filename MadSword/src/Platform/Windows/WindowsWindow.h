@@ -3,6 +3,8 @@
 #include "MadSword/Window.h"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
+#include <GLFW/glfw3native.h>
+
 
 namespace MadSword {
 	class WindowsWindow :public Window
@@ -12,9 +14,11 @@ namespace MadSword {
 		virtual ~WindowsWindow();
 
 		void OnUpdate() override;
+		void ClearFrameBuffer() override;
 
 		inline unsigned int GetWidth() const override { return m_Data.Width; }
 		inline unsigned int GetHeight() const override { return m_Data.Height; }
+		void* GetNativeWindow() override { return (void*)glfwGetWin32Window(m_Window); }
 
 		inline void SetEventCallback(const EventCallbackFn& callback) { m_Data.EventCallback = callback; }
 		void SetVSync(bool enabled) override;

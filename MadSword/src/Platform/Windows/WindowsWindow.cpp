@@ -21,13 +21,14 @@ namespace MadSword {
     }
     void WindowsWindow::OnUpdate()
     {
-        {
-            glViewport(0, 0, m_Data.Width, m_Data.Height);
-            glClearColor(0.2, 0.3, 0.1, 1.0);
-            glClear(GL_COLOR_BUFFER_BIT);
-        }
         glfwPollEvents();
         glfwSwapBuffers(m_Window);
+    }
+    void WindowsWindow::ClearFrameBuffer()
+    {
+        glViewport(0, 0, m_Data.Width, m_Data.Height);
+        glClearColor(0.2, 0.3, 0.1, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     }
     void WindowsWindow::SetVSync(bool enabled)
     {

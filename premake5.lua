@@ -47,8 +47,8 @@ project "MadSword" --项目名称
     {
         "%{prj.name}/src",
         "%{prj.name}/vendor/spdlog/include",
-        "%{prj.name}/vendor/glfw/include",
-        "%{prj.name}/vendor/glad/include",
+        "%{IncludeDir.glfw}",
+        "%{IncludeDir.glad}",
         "%{IncludeDir.imgui}"
     }
 
@@ -56,7 +56,7 @@ project "MadSword" --项目名称
     {
         "glfw",
         "glad",
-        "imgui",
+        "ImGui",
         "opengl32.lib"
     }
 
@@ -71,6 +71,7 @@ project "MadSword" --项目名称
             "MS_PLATFORM_WINDOWS",
             "MS_ENABLE_ASSERTS",
             "GLFW_INCLUDE_NONE",
+            "GLFW_EXPOSE_NATIVE_WIN32",
             "_WINDLL",
             "_UNICODE",
             "UNICODE",

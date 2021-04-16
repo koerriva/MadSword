@@ -4,11 +4,11 @@ class DebugLayer : public MadSword::Layer {
 public:
 	DebugLayer():Layer("DebugLayer"){};
 	void OnUpdate() override {
-		MS_TRACE("DebugLayer:Update");
+		//MS_TRACE("DebugLayer:Update");
 	}
 
 	void OnEvent(MadSword::Event& e) override {
-		MS_INFO("DebugLayer:Event {}", e);
+		//MS_INFO("DebugLayer:Event {}", e);
 	}
 };
 
@@ -22,6 +22,7 @@ public:
 		MS_CRITICAL("Sandbox startup");
 
 		PushLayer(new DebugLayer());
+		PushOverlay(new MadSword::ImGuiLayer());
 	}
 
 	~Sandbox() {
