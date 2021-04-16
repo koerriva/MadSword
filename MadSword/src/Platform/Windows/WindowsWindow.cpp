@@ -39,6 +39,10 @@ namespace MadSword {
     {
         return m_Data.VSync;
     }
+    void WindowsWindow::SetCursor(bool show)
+    {
+        glfwSetInputMode(m_Window, GLFW_CURSOR, show? GLFW_CURSOR_NORMAL:GLFW_CURSOR_HIDDEN);
+    }
     void WindowsWindow::Init(const WindowProps& props)
     {
         m_Data.Title = props.Title;

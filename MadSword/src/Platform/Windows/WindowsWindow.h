@@ -26,6 +26,7 @@ namespace MadSword {
 		inline void SetEventCallback(const EventCallbackFn& callback) { m_Data.EventCallback = callback; }
 		void SetVSync(bool enabled) override;
 		bool IsVSync() const override;
+		void SetCursor(bool show) override;
 
 	private:
 		virtual void Init(const WindowProps& props);

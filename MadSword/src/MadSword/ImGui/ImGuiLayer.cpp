@@ -29,8 +29,13 @@ namespace MadSword {
 		io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
 		io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
 		io.BackendPlatformName = "imgui_impl_glfw";
+
 		Application& app = Application::Instance();
-		io.ImeWindowHandle = app.GetWindow().GetNativeWindow();
+		Window& window = app.GetWindow();
+		io.ImeWindowHandle = window.GetNativeWindow();
+		io.MouseDrawCursor = true;
+		window.SetCursor(false);
+		window.SetVSync(false);
 
 		// Keyboard mapping. Dear ImGui will use those indices to peek into the io.KeysDown[] array.
 		io.KeyMap[ImGuiKey_Tab] = GLFW_KEY_TAB;
@@ -101,28 +106,24 @@ namespace MadSword {
 	}
 	bool ImGuiLayer::OnMouseButtonPressedEvent(MouseButtonPressedEvent& event)
 	{
-		MS_TRACE("{0},{1}", GetName(), event);
 		ImGuiIO& io = ImGui::GetIO();
 		io.MouseDown[event.GetMouseButton()] = true;
 		return false;
 	}
 	bool ImGuiLayer::OnMouseButtonReleasedEvent(MouseButtonReleasedEvent& event)
 	{
-		MS_TRACE("{0},{1}", GetName(), event);
 		ImGuiIO& io = ImGui::GetIO();
 		io.MouseDown[event.GetMouseButton()] = false;
 		return false;
 	}
 	bool ImGuiLayer::OnMouseMovedEvent(MouseMovedEvent& event)
 	{
-		MS_TRACE("{0},{1}", GetName(), event);
 		ImGuiIO& io = ImGui::GetIO();
 		io.MousePos = ImVec2(event.GetX(),event.GetY());
 		return false;
 	}
 	bool ImGuiLayer::OnMouseScrolledEvent(MouseScrolledEvent& event)
 	{
-		MS_TRACE("{0},{1}", GetName(), event);
 		ImGuiIO& io = ImGui::GetIO();
 		io.MouseWheelH += event.GetX();
 		io.MouseWheel += event.GetY();
@@ -130,7 +131,6 @@ namespace MadSword {
 	}
 	bool ImGuiLayer::OnKeyPressedEvent(KeyPressedEvent& event)
 	{
-		MS_TRACE("{0},{1}",GetName(),event);
 		ImGuiIO& io = ImGui::GetIO();
 		io.KeysDown[event.GetKeyCode()] = true;
 
@@ -143,7 +143,6 @@ namespace MadSword {
 	}
 	bool ImGuiLayer::OnKeyReleasedEvent(KeyReleasedEvent& event) 
 	{
-		MS_TRACE("{0},{1}", GetName(), event);
 		ImGuiIO& io = ImGui::GetIO();
 		io.KeysDown[event.GetKeyCode()] = false;
 
@@ -151,7 +150,6 @@ namespace MadSword {
 	}
 	bool ImGuiLayer::OnKeyTypedEvent(KeyTypedEvent& event)
 	{
-		MS_TRACE("{0},{1}", GetName(), event);
 		ImGuiIO& io = ImGui::GetIO();
 		int keycode = event.GetKeyCode();
 		if (keycode > 0 && keycode < 0x10000) {
@@ -161,7 +159,6 @@ namespace MadSword {
 	}
 	bool ImGuiLayer::OnWindowResizeEvent(WindowResizeEvent& event)
 	{
-		MS_TRACE("{0},{1}", GetName(), event);
 		ImGuiIO& io = ImGui::GetIO();
 		io.DisplaySize = ImVec2(event.GetWidth(),event.GetHeight());
 		return false;
