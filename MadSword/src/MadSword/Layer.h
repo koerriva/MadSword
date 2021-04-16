@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Events/Event.h"
+#include <MadSword/Events/MouseEvent.h>
+#include <MadSword/Events/ApplicationEvent.h>
+#include <MadSword/Events/KeyEvent.h>
 
 namespace MadSword {
 	class MS_API Layer {

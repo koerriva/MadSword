@@ -24,8 +24,15 @@ namespace MadSword {
 	class MS_API WindowResizeEvent :public Event {
 	public:
 		WindowResizeEvent(unsigned int width,unsigned int height):m_Width(width),m_Height(height){}
+		WindowResizeEvent(unsigned int width, unsigned int height,float xscale,float yscale) :m_Width(width), m_Height(height) {
+			m_XScale = xscale;
+			m_YScale = yscale;
+		}
 		inline unsigned int GetWidth() const { return m_Width; }
 		inline unsigned int GetHeight() const { return m_Height; }
+
+		inline float GetXScale() const { return m_XScale; }
+		inline float GetYScale() const { return m_YScale; }
 
 		std::string ToString() const override {
 			std::stringstream ss;
@@ -37,6 +44,7 @@ namespace MadSword {
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	private:
 		unsigned int m_Width, m_Height;
+		float m_XScale=1, m_YScale=1;
 	};
 
 	class MS_API WindowCloseEvent :public Event {

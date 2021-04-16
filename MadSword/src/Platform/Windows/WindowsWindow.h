@@ -32,6 +32,8 @@ namespace MadSword {
 		struct WindowData {
 			std::string Title;
 			unsigned int Width, Height;
+			unsigned int fbWidth, fbHeight;
+			float xscale, yscale;
 			bool VSync;
 			EventCallbackFn EventCallback;
 		};

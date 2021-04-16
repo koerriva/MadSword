@@ -82,7 +82,11 @@ namespace MadSword {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
             data.Width = width;
             data.Height = height;
-            WindowResizeEvent event(width,height);
+            float xs, ys;
+            glfwGetWindowContentScale(window, &xs, &ys);
+            data.xscale = xs;
+            data.yscale = ys;
+            WindowResizeEvent event(width,height,xs,ys);
             data.EventCallback(event);
             });
         glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window) {

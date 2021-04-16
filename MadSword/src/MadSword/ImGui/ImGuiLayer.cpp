@@ -18,6 +18,14 @@ namespace MadSword {
 		ImGui::StyleColorsDark();
 
 		ImGuiIO& io = ImGui::GetIO();
+		io.Fonts->AddFontFromFileTTF("data/fonts/Roboto.ttf", 16, nullptr,
+			io.Fonts->GetGlyphRangesDefault());
+		ImFontConfig fontConf;
+		fontConf.OversampleH = 2;
+		io.Fonts->AddFontFromFileTTF("data/fonts/LiHeiPro.ttf", 16,&fontConf,
+			io.Fonts->GetGlyphRangesChineseSimplifiedCommon());
+		io.Fonts->AddFontFromFileTTF("data/fonts/NotoSansSC.otf", 16, &fontConf,
+			io.Fonts->GetGlyphRangesChineseSimplifiedCommon());
 		io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
 		io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
 		io.BackendPlatformName = "imgui_impl_glfw";
@@ -70,12 +78,92 @@ namespace MadSword {
 
 		static bool show = true;
 		ImGui::ShowDemoWindow(&show);
-		ImGui::ShowMetricsWindow(&show);
+
+		ImGui::Begin(u8"ÖÐÎÄ×Ö·û²âÊÔ");
+		ImGui::Text(u8"test Text²âÊÔ");
+		ImGui::End();
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	}
 	void ImGuiLayer::OnEvent(Event& event)
 	{
+		EventDispatcher dispatcher(event);
+		dispatcher.Dispatch<MouseButtonPressedEvent>(EVENT_BIND_FUNCTION(ImGuiLayer::OnMouseButtonPressedEvent));
+		dispatcher.Dispatch<MouseButtonReleasedEvent>(EVENT_BIND_FUNCTION(ImGuiLayer::OnMouseButtonReleasedEvent));
+		dispatcher.Dispatch<MouseMovedEvent>(EVENT_BIND_FUNCTION(ImGuiLayer::OnMouseMovedEvent));
+		dispatcher.Dispatch<MouseScrolledEvent>(EVENT_BIND_FUNCTION(ImGuiLayer::OnMouseScrolledEvent));
+		dispatcher.Dispatch<KeyPressedEvent>(EVENT_BIND_FUNCTION(ImGuiLayer::OnKeyPressedEvent));
+		dispatcher.Dispatch<KeyReleasedEvent>(EVENT_BIND_FUNCTION(ImGuiLayer::OnKeyReleasedEvent));
+		dispatcher.Dispatch<KeyTypedEvent>(EVENT_BIND_FUNCTION(ImGuiLayer::OnKeyTypedEvent));
+		dispatcher.Dispatch<WindowResizeEvent>(EVENT_BIND_FUNCTION(ImGuiLayer::OnWindowResizeEvent));
+	}
+	bool ImGuiLayer::OnMouseButtonPressedEvent(MouseButtonPressedEvent& event)
+	{
+		MS_TRACE("{0},{1}", GetName(), event);
+		ImGuiIO& io = ImGui::GetIO();
+		io.MouseDown[event.GetMouseButton()] = true;
+		return false;
+	}
+	bool ImGuiLayer::OnMouseButtonReleasedEvent(MouseButtonReleasedEvent& event)
+	{
+		MS_TRACE("{0},{1}", GetName(), event);
+		ImGuiIO& io = ImGui::GetIO();
+		io.MouseDown[event.GetMouseButton()] = false;
+		return false;
+	}
+	bool ImGuiLayer::OnMouseMovedEvent(MouseMovedEvent& event)
+	{
+		MS_TRACE("{0},{1}", GetName(), event);
+		ImGuiIO& io = ImGui::GetIO();
+		io.MousePos = ImVec2(event.GetX(),event.GetY());
+		return false;
+	}
+	bool ImGuiLayer::OnMouseScrolledEvent(MouseScrolledEvent& event)
+	{
+		MS_TRACE("{0},{1}", GetName(), event);
+		ImGuiIO& io = ImGui::GetIO();
+		io.MouseWheelH += event.GetX();
+		io.MouseWheel += event.GetY();
+		return false;
+	}
+	bool ImGuiLayer::OnKeyPressedEvent(KeyPressedEvent& event)
+	{
+		MS_TRACE("{0},{1}",GetName(),event);
+		ImGuiIO& io = ImGui::GetIO();
+		io.KeysDown[event.GetKeyCode()] = true;
+
+		io.KeyCtrl = io.KeysDown[GLFW_KEY_LEFT_CONTROL] || io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
+		io.KeyAlt = io.KeysDown[GLFW_KEY_LEFT_ALT] || io.KeysDown[GLFW_KEY_RIGHT_ALT];
+		io.KeyShift = io.KeysDown[GLFW_KEY_LEFT_SHIFT] || io.KeysDown[GLFW_KEY_RIGHT_SHIFT];
+		io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
+
+		return false;
+	}
+	bool ImGuiLayer::OnKeyReleasedEvent(KeyReleasedEvent& event) 
+	{
+		MS_TRACE("{0},{1}", GetName(), event);
+		ImGuiIO& io = ImGui::GetIO();
+		io.KeysDown[event.GetKeyCode()] = false;
+
+		return false;
+	}
+	bool ImGuiLayer::OnKeyTypedEvent(KeyTypedEvent& event)
+	{
+		MS_TRACE("{0},{1}", GetName(), event);
+		ImGuiIO& io = ImGui::GetIO();
+		int keycode = event.GetKeyCode();
+		if (keycode > 0 && keycode < 0x10000) {
+			io.AddInputCharacter(keycode);
+		}
+		return false;
+	}
+	bool ImGuiLayer::OnWindowResizeEvent(WindowResizeEvent& event)
+	{
+		MS_TRACE("{0},{1}", GetName(), event);
+		ImGuiIO& io = ImGui::GetIO();
+		io.DisplaySize = ImVec2(event.GetWidth(),event.GetHeight());
+		io.DisplayFramebufferScale = ImVec2(event.GetXScale(),event.GetYScale());
+		return false;
 	}
 }
