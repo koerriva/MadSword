@@ -32,7 +32,7 @@ namespace MadSword {
 
 		Application& app = Application::Instance();
 		Window& window = app.GetWindow();
-		io.ImeWindowHandle = window.GetNativeWindow();
+		io.ImeWindowHandle = window.GetPlatformHandle();
 		io.MouseDrawCursor = true;
 		window.SetCursor(false);
 		window.SetVSync(false);

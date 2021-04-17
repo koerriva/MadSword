@@ -27,6 +27,7 @@ namespace MadSword {
 		virtual void ClearFramebuffer() = 0;
 
 		virtual void* GetNativeWindow() = 0;
+		virtual void* GetPlatformHandle() = 0;
 
 		//…Ë÷√ Ù–‘
 		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;

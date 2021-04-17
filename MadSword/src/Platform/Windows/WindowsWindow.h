@@ -21,7 +21,8 @@ namespace MadSword {
 		inline unsigned int GetFramebufferWidth() const override { return m_Data.FramebufferWidth; }
 		inline unsigned int GetFramebufferHeight() const override { return m_Data.FramebufferHeight; }
 
-		void* GetNativeWindow() override { return (void*)glfwGetWin32Window(m_Window); }
+		void* GetNativeWindow() override { return m_Window; }
+		void* GetPlatformHandle() override { return glfwGetWin32Window(m_Window); }
 
 		inline void SetEventCallback(const EventCallbackFn& callback) { m_Data.EventCallback = callback; }
 		void SetVSync(bool enabled) override;

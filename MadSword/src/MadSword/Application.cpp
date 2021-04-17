@@ -1,6 +1,7 @@
 #include "mspch.h"
 #include "Application.h"
 #include "Log.h"
+#include "Input.h"
 
 namespace MadSword {
 	Application* Application::s_Instance = nullptr;
@@ -17,6 +18,8 @@ namespace MadSword {
 		while (m_Running) {
 			m_Window->ClearFramebuffer();
 
+			auto [x, y] = Input::GetMousePos();
+			MS_CORE_TRACE("mouse pos {},{}", x, y);
 			for each (Layer * layer in m_LayerStack)
 			{
 				layer->OnUpdate();
