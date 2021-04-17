@@ -6,6 +6,7 @@
 #include "Window.h"
 #include <MadSword/LayerStack.h>
 
+#include "ImGui/ImGuiLayer.h"
 namespace MadSword {
 	class MS_API Application
 	{
@@ -24,6 +25,7 @@ namespace MadSword {
 		bool OnWindowClose(WindowCloseEvent& e);
 		std::unique_ptr<Window> m_Window;
 		bool m_Running = true;
+		ImGuiLayer* m_ImGuiLayer;
 
 		LayerStack m_LayerStack;
 	private:

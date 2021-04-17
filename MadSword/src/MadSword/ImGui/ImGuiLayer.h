@@ -12,6 +12,11 @@ namespace MadSword {
 		void OnDeAttach() override;
 		void OnUpdate() override;
 		void OnEvent(Event& e) override;
+
+		void OnImGuiRender() override;
+
+		void Begin();
+		void End();
 	private:
 		//ЪѓБъ
 		bool OnMouseButtonPressedEvent(MouseButtonPressedEvent& event);

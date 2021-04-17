@@ -33,9 +33,9 @@ namespace MadSword {
 		Application& app = Application::Instance();
 		Window& window = app.GetWindow();
 		io.ImeWindowHandle = window.GetPlatformHandle();
-		io.MouseDrawCursor = true;
-		window.SetCursor(false);
-		window.SetVSync(false);
+		//io.MouseDrawCursor = true;
+		//window.SetCursor(false);
+		//window.SetVSync(false);
 
 		// Keyboard mapping. Dear ImGui will use those indices to peek into the io.KeysDown[] array.
 		io.KeyMap[ImGuiKey_Tab] = GLFW_KEY_TAB;
@@ -103,6 +103,15 @@ namespace MadSword {
 		dispatcher.Dispatch<KeyReleasedEvent>(MS_BIND_EVENT_FN(ImGuiLayer::OnKeyReleasedEvent));
 		dispatcher.Dispatch<KeyTypedEvent>(MS_BIND_EVENT_FN(ImGuiLayer::OnKeyTypedEvent));
 		dispatcher.Dispatch<WindowResizeEvent>(MS_BIND_EVENT_FN(ImGuiLayer::OnWindowResizeEvent));
+	}
+	void ImGuiLayer::OnImGuiRender()
+	{
+	}
+	void ImGuiLayer::Begin()
+	{
+	}
+	void ImGuiLayer::End()
+	{
 	}
 	bool ImGuiLayer::OnMouseButtonPressedEvent(MouseButtonPressedEvent& event)
 	{

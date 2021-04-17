@@ -16,6 +16,8 @@ namespace MadSword {
 		virtual void OnUpdate() {};
 		virtual void OnEvent(Event& e);
 
+		virtual void OnImGuiRender() {};
+
 		inline std::string& GetName() { return m_DebugName; }
 	private:
 		std::string m_DebugName;

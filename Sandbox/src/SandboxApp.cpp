@@ -22,7 +22,6 @@ public:
 		MS_CRITICAL("Sandbox startup");
 
 		PushLayer(new DebugLayer());
-		PushOverlay(new MadSword::ImGuiLayer());
 	}
 
 	~Sandbox() {
