@@ -18,18 +18,6 @@ namespace MadSword {
 		void Begin();
 		void End();
 	private:
-		//Êó±ê
-		bool OnMouseButtonPressedEvent(MouseButtonPressedEvent& event);
-		bool OnMouseButtonReleasedEvent(MouseButtonReleasedEvent& event);
-		bool OnMouseMovedEvent(MouseMovedEvent& event);
-		bool OnMouseScrolledEvent(MouseScrolledEvent& event);
-		//¼üÅÌ
-		bool OnKeyPressedEvent(KeyPressedEvent& event);
-		bool OnKeyReleasedEvent(KeyReleasedEvent& event);
-		bool OnKeyTypedEvent(KeyTypedEvent& event);
-		//´°¿Ú
-		bool OnWindowResizeEvent(WindowResizeEvent& event);
-
 		float m_Time=0;
 	};
 }

@@ -1,4 +1,5 @@
 #include <MadSword.h>
+#include <imgui.h>
 
 class DebugLayer : public MadSword::Layer {
 public:
@@ -9,6 +10,13 @@ public:
 
 	void OnEvent(MadSword::Event& e) override {
 		//MS_INFO("DebugLayer:Event {}", e);
+	}
+
+	void OnImGuiRender() override {
+		static bool show = true;
+		ImGui::Begin(u8"≤‚ ‘",&show,ImGuiWindowFlags_DockNodeHost);
+		ImGui::Text(u8"Hello wrold!ƒ„∫√ ¿ΩÁ!");
+		ImGui::End();
 	}
 };
 

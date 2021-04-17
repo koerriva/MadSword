@@ -22,12 +22,17 @@ namespace MadSword {
 		while (m_Running) {
 			m_Window->ClearFramebuffer();
 
-			auto [x, y] = Input::GetMousePos();
-			MS_CORE_TRACE("mouse pos {},{}", x, y);
 			for each (Layer * layer in m_LayerStack)
 			{
 				layer->OnUpdate();
 			}
+
+			m_ImGuiLayer->Begin();
+			for each (Layer * layer in m_LayerStack)
+			{
+				layer->OnImGuiRender();
+			}
+			m_ImGuiLayer->End();
 
 			m_Window->OnUpdate();
 		}

@@ -121,6 +121,7 @@ project "Sandbox"
         {
             "MadSword/vendor/spdlog/include",
             "MadSword/src",
+            "%{IncludeDir.imgui}",
             "%{IncludeDir.glm}"
         }
 
@@ -131,7 +132,6 @@ project "Sandbox"
         
         filter "system:windows" --windows平台配置
             cppdialect "c++17"
-            staticruntime "On"
             systemversion "latest"
 
             defines --预编译宏
