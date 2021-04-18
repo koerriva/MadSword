@@ -2,7 +2,7 @@
 #include "Event.h"
 
 namespace MadSword {
-	class MS_API KeyEvent :public Event {
+	class KeyEvent :public Event {
 	public:
 		inline int GetKeyCode() const { return m_KeyCode; }
 		EVENT_CLASS_CATEGORY(EventCategoryInput | EventCategoryKeyboard)
@@ -11,7 +11,7 @@ namespace MadSword {
 		int m_KeyCode;
 	};
 
-	class MS_API KeyPressedEvent :public KeyEvent {
+	class KeyPressedEvent :public KeyEvent {
 	public:
 		KeyPressedEvent(const int keycode,uint16_t repeatCount):KeyEvent(keycode),m_RepeatCount(repeatCount){}
 		uint16_t GetRepeatCount() const { return m_RepeatCount; }
@@ -25,7 +25,7 @@ namespace MadSword {
 		uint16_t m_RepeatCount;
 	};
 
-	class MS_API KeyReleasedEvent :public KeyEvent {
+	class KeyReleasedEvent :public KeyEvent {
 	public:
 		KeyReleasedEvent(const int keycode) :KeyEvent(keycode){}
 		std::string ToString() const override {
@@ -36,7 +36,7 @@ namespace MadSword {
 		EVENT_CLASS_TYPE(KeyReleased)
 	};
 
-	class MS_API KeyTypedEvent :public KeyEvent {
+	class KeyTypedEvent :public KeyEvent {
 	public:
 		KeyTypedEvent(const int keycode) :KeyEvent(keycode) {}
 		std::string ToString() const override {

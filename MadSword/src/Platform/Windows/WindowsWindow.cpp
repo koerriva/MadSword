@@ -27,7 +27,7 @@ namespace MadSword {
     void WindowsWindow::ClearFramebuffer()
     {
         glViewport(0, 0, m_Data.Width, m_Data.Height);
-        glClearColor(0.2, 0.3, 0.1, 1.0);
+        glClearColor(0.2f, 0.3f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     }
     void WindowsWindow::SetVSync(bool enabled)
@@ -160,12 +160,12 @@ namespace MadSword {
             });
         glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xoffset, double yoffset) {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-            MouseScrolledEvent event(xoffset, yoffset);
+            MouseScrolledEvent event(static_cast<float>(xoffset), static_cast<float>(yoffset));
             data.EventCallback(event);
             });
         glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double x,double y) {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-            MouseMovedEvent event(x, y);
+            MouseMovedEvent event(static_cast<float>(x), static_cast<float>(y));
             data.EventCallback(event);
             });
     }

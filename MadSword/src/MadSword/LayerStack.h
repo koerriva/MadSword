@@ -4,7 +4,7 @@
 #include "Layer.h"
 
 namespace MadSword {
-	class MS_API LayerStack {
+	class LayerStack {
 	public:
 		LayerStack();
 		~LayerStack();

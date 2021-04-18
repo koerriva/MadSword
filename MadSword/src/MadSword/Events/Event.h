@@ -27,7 +27,7 @@ namespace MadSword {
 
 #define EVENT_CLASS_CATEGORY(category) virtual int GetCategoryFlags() const override { return category; }
 
-	class MS_API Event {
+	class Event {
 	public:
 		virtual ~Event() = default;
 
@@ -50,7 +50,7 @@ namespace MadSword {
 		bool m_Handled = false;
 	};
 
-	class MS_API EventDispatcher {
+	class EventDispatcher {
 		template<typename T>
 		using EventFn = std::function<bool(T&)>;
 	public:

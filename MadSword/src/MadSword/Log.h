@@ -5,7 +5,7 @@
 #include "spdlog/fmt/ostr.h"
 
 namespace MadSword {
-	class MS_API Log {
+	class Log {
 	private:
 		static std::shared_ptr<spdlog::logger> s_CoreLogger;
 		static std::shared_ptr<spdlog::logger> s_ClientLogger;

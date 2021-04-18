@@ -3,7 +3,7 @@
 #include "Event.h"
 
 namespace MadSword {
-	class MS_API WindowMovedEvent :public Event {
+	class WindowMovedEvent :public Event {
 	public:
 		WindowMovedEvent(unsigned int x, unsigned int y) :m_X(x), m_Y(y) {}
 		inline unsigned int GetX() const { return m_X; }
@@ -21,7 +21,7 @@ namespace MadSword {
 		unsigned int m_X, m_Y;
 	};
 
-	class MS_API WindowResizeEvent :public Event {
+	class WindowResizeEvent :public Event {
 	public:
 		WindowResizeEvent(unsigned int width,unsigned int height):m_Width(width),m_Height(height){}
 		WindowResizeEvent(unsigned int width, unsigned int height,float xscale,float yscale) :m_Width(width), m_Height(height) {
@@ -47,7 +47,7 @@ namespace MadSword {
 		float m_XScale=1, m_YScale=1;
 	};
 
-	class MS_API WindowCloseEvent :public Event {
+	class WindowCloseEvent :public Event {
 	public:
 		WindowCloseEvent() = default;
 
@@ -61,7 +61,7 @@ namespace MadSword {
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
 
-	class MS_API WindowFocusEvent :public Event {
+	class WindowFocusEvent :public Event {
 	public:
 		WindowFocusEvent() = default;
 
@@ -75,7 +75,7 @@ namespace MadSword {
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
 
-	class MS_API WindowLostFocusEvent :public Event {
+	class WindowLostFocusEvent :public Event {
 	public:
 		WindowLostFocusEvent() = default;
 
@@ -89,7 +89,7 @@ namespace MadSword {
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
 
-	class MS_API AppTickEvent :public Event {
+	class AppTickEvent :public Event {
 	public:
 		AppTickEvent() = default;
 
@@ -97,7 +97,7 @@ namespace MadSword {
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
 
-	class MS_API AppUpdateEvent :public Event {
+	class AppUpdateEvent :public Event {
 	public:
 		AppUpdateEvent() = default;
 
@@ -105,7 +105,7 @@ namespace MadSword {
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
 
-	class MS_API AppRenderEvent :public Event {
+	class AppRenderEvent :public Event {
 	public:
 		AppRenderEvent() = default;
 

@@ -30,9 +30,10 @@ include "MadSword/vendor/imgui"
 
 project "MadSword" --项目名称
     location "MadSword" --相对路径
-    kind "SharedLib"    --表明该项目是dll动态库
-    language "c++"
-    staticruntime "off"
+    kind "StaticLib"    --表明该项目是dll动态库
+    language "C++"
+    staticruntime "on"
+    cppdialect "C++17"
 
     targetdir("bin/" .. outputdir .. "/%{prj.name}")--输出目录
     objdir("bin-int/" .. outputdir .. "/%{prj.name}")--中间临时文件
@@ -46,6 +47,10 @@ project "MadSword" --项目名称
         "%{prj.name}/src/**.cpp",
         "%{prj.name}/vendor/glm/glm/**.hpp",
         "%{prj.name}/vendor/glm/glm/**.inl"
+    }
+
+    defines {
+        "_CRT_SECURE_NO_WARNINGS"
     }
 
     includedirs --包含目录
@@ -67,7 +72,6 @@ project "MadSword" --项目名称
     }
 
     filter "system:windows" --windows平台配置
-        cppdialect "c++17"
         systemversion "latest"
 
         defines --预编译宏
@@ -76,16 +80,15 @@ project "MadSword" --项目名称
             "MS_PLATFORM_WINDOWS",
             "MS_ENABLE_ASSERTS",
             "GLFW_INCLUDE_NONE",
-            "GLFW_EXPOSE_NATIVE_WIN32",
             "_WINDLL",
             "_UNICODE",
             "UNICODE",
         }
 
-        postbuildcommands --build后的自定义命令
-        {
-            ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox") --拷贝引擎库文件
-        }
+        -- postbuildcommands --build后的自定义命令
+        -- {
+        --     ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox") --拷贝引擎库文件
+        -- }
 
     filter "configurations:Debug"
         defines "MS_DEBUG"
@@ -105,8 +108,9 @@ project "MadSword" --项目名称
 project "Sandbox"
         location "Sandbox"
         kind "ConsoleApp"
-        language "c++"
-        staticruntime "off"
+        language "C++"
+        cppdialect "C++17"
+        staticruntime "on"
 
         targetdir("bin/" .. outputdir .. "/%{prj.name}")--输出目录
         objdir("bin-int/" .. outputdir .. "/%{prj.name}")--中间临时文件
@@ -131,7 +135,6 @@ project "Sandbox"
         }
         
         filter "system:windows" --windows平台配置
-            cppdialect "c++17"
             systemversion "latest"
 
             defines --预编译宏

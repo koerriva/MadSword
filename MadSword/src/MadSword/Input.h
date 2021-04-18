@@ -4,7 +4,7 @@
 #include <utility>
 
 namespace MadSword {
-	class MS_API Input {
+	class Input {
 	public:
 		static bool IsKeyDown(int keycode) { return s_Instance->IsKeyDownImpl(keycode); }
 		static bool IsMouseButtonDown(int button) { return s_Instance->IsMouseButtonDownImpl(button); }

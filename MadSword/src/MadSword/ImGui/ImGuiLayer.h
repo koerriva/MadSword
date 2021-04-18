@@ -3,7 +3,7 @@
 #include "MadSword/Layer.h"
 
 namespace MadSword {
-	class MS_API ImGuiLayer :public Layer
+	class ImGuiLayer :public Layer
 	{
 	public:
 		ImGuiLayer();

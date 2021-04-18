@@ -8,7 +8,7 @@
 
 #include "ImGui/ImGuiLayer.h"
 namespace MadSword {
-	class MS_API Application
+	class Application
 	{
 	public:
 		Application();

@@ -6,7 +6,7 @@
 #include <MadSword/Events/KeyEvent.h>
 
 namespace MadSword {
-	class MS_API Layer {
+	class Layer {
 	public:
 		Layer(const std::string& name = "Layer") :m_DebugName(name) {};
 		virtual ~Layer();

@@ -2,7 +2,6 @@
 #include "ImGuiLayer.h"
 
 #include "imgui.h"
-#define IMGUI_IMPL_API
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 
@@ -97,7 +96,7 @@ namespace MadSword {
         ImGuiIO& io = ImGui::GetIO();
         Application& app = Application::Instance();
         Window& window = app.GetWindow();
-        io.DisplaySize = ImVec2(window.GetWidth(), window.GetHeight());
+        io.DisplaySize = ImVec2(static_cast<float>(window.GetWidth()), static_cast<float>(window.GetHeight()));
 
         // Rendering
         ImGui::Render();

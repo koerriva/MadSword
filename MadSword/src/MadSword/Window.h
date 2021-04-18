@@ -12,7 +12,7 @@ namespace MadSword {
 			unsigned int height=720):Title(title),Width(width),Height(height){}
 	};
 
-	class MS_API Window {
+	class Window {
 	public:
 		using EventCallbackFn = std::function<void(Event&)>;
 

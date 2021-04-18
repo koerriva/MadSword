@@ -26,7 +26,7 @@ namespace MadSword {
 		GLFWwindow* glfw_handle = static_cast<GLFWwindow*>(Application::Instance().GetWindow().GetNativeWindow());
 		double x=0, y=0;
 		glfwGetCursorPos(glfw_handle, &x, &y);
-		return std::pair<float, float>(x,y);
+		return std::pair<float, float>(static_cast<float>(x), static_cast<float>(y));
 	}
 
 	float WindowsInput::GetMouseXImpl()
