@@ -7,6 +7,7 @@
 #include <MadSword/LayerStack.h>
 
 #include "ImGui/ImGuiLayer.h"
+#include <MadSword/Renderer/Shader.h>
 namespace MadSword {
 	class Application
 	{
@@ -28,6 +29,8 @@ namespace MadSword {
 		ImGuiLayer* m_ImGuiLayer;
 
 		LayerStack m_LayerStack;
+
+		std::unique_ptr<Shader> m_Shader;
 	private:
 		static Application* s_Instance;
 	};

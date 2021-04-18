@@ -15,6 +15,29 @@ namespace MadSword {
 		m_ImGuiLayer = new ImGuiLayer();
 
 		PushOverlay(m_ImGuiLayer);
+
+		const std::string vert = R"(
+			#version 410 core
+			layout(location=0) in vec3 position; 
+			out vec4 vertColor;
+			out vec3 vertPos;
+			void main(){
+				vertColor = vec4(1.);
+				vertPos = position;
+				gl_Position = vec4(position,1.0);
+			}
+		)";
+		const std::string frag = R"(
+			#version 410 core
+
+			in vec3 vertPos;
+			in vec4 vertColor;
+
+			void main(){
+				gl_FragColor = vertColor;
+			}
+		)";
+		m_Shader.reset(new Shader(vert,frag));
 	}
 	Application::~Application(){}
 
