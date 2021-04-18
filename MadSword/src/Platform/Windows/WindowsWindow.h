@@ -5,6 +5,8 @@
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include "GLFW/glfw3.h"
 #include <GLFW/glfw3native.h>
+#include <MadSword/Renderer/GraphicsContext.h>
+#include <Platform/OpenGL/OpenGLContext.h>
 
 
 namespace MadSword {
@@ -35,6 +37,7 @@ namespace MadSword {
 		virtual void Shutdown();
 	private:
 		GLFWwindow* m_Window;
+		GraphicsContext* m_Context;
 		struct WindowData {
 			std::string Title;
 			unsigned int Width, Height;

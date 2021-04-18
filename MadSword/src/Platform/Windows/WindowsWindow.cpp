@@ -22,7 +22,7 @@ namespace MadSword {
     void WindowsWindow::OnUpdate()
     {
         glfwPollEvents();
-        glfwSwapBuffers(m_Window);
+        m_Context->SwapBuffers();
     }
     void WindowsWindow::ClearFramebuffer()
     {
@@ -58,7 +58,10 @@ namespace MadSword {
         }
 
         m_Window = glfwCreateWindow(props.Width, props.Height, props.Title.c_str(), nullptr, nullptr);
-        glfwMakeContextCurrent(m_Window);
+
+        m_Context = new OpenGLContext(m_Window);
+        m_Context->Init();
+
         int fw, fh;
         glfwGetFramebufferSize(m_Window, &fw, &fh);
         m_Data.FramebufferWidth = fw;
@@ -70,9 +73,6 @@ namespace MadSword {
 
         glfwSetWindowUserPointer(m_Window, &m_Data);
         SetVSync(true);
-
-        int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-        MS_CORE_ASSERT(status, "Glad≥ı ºªØ ß∞‹");
 
         glfwSetWindowPosCallback(m_Window, [](GLFWwindow* window, int x, int y) {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
