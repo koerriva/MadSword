@@ -13,7 +13,7 @@ namespace MadSword {
 
 	ImGuiLayer::ImGuiLayer():Layer("ImGuiLayer")
 	{
-		m_Time = 0;
+		m_Time = static_cast<float>(glfwGetTime());
 	}
 	ImGuiLayer::~ImGuiLayer()
 	{

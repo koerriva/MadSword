@@ -125,6 +125,7 @@ project "Sandbox"
         {
             "MadSword/vendor/spdlog/include",
             "MadSword/src",
+            "%{prj.name}/src",
             "%{IncludeDir.imgui}",
             "%{IncludeDir.glm}"
         }

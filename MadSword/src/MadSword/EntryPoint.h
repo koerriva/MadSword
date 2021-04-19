@@ -5,11 +5,7 @@ extern MadSword::Application* MadSword::CreateApplication();
 
 int main(int argc,char** argv) {
 	MadSword::Log::Init();
-	MS_CORE_TRACE("Engine Init.");
 	MS_CORE_INFO("Engine Init.");
-	MS_CORE_WARN("Engine Init.");
-	MS_CORE_ERROR("Engine Init.");
-	MS_CORE_CRITICAL("Engine Init.");
 
 	auto app = MadSword::CreateApplication();
 	app->Run();
