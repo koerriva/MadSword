@@ -37,7 +37,7 @@ namespace MadSword {
 				gl_FragColor = vertColor;
 			}
 		)";
-		m_Shader.reset(new Shader(vert,frag));
+		m_Shader.reset(Shader::Create(vert,frag));
 	}
 	Application::~Application(){}
 
