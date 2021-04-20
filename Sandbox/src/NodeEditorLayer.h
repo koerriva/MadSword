@@ -8,7 +8,7 @@
 
 #include <vector>
 #include <imgui.h>
-#include <imnodes.h>
+#include <imnodes/imnodes.h>
 
 namespace App {
 	struct Node
