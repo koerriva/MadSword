@@ -23,7 +23,7 @@ namespace MadSword {
 			0.5f,-0.5f,0.0f,0.0f,1.0f,0.0f,1.0f,
 			0.0f,0.5f,0.0f,0.0f,0.0f,1.0f,1.0f,
 		};
-		m_VertexBuffer.reset(VertexBuffer::Create(vertices,9*sizeof(float)));
+		m_VertexBuffer.reset(VertexBuffer::Create(vertices,21*sizeof(float)));
 
 		BufferLayout layout = {
 			{ShaderDataType::Vec3f,"position"},
