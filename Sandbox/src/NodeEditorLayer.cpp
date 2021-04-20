@@ -3,7 +3,15 @@
 #include <fstream>
 
 namespace App {
-	void NodeEditor::Show()
+    NodeEditor::NodeEditor()
+        :nodes_(),links_(),current_id_(0)
+    {}
+    NodeEditor::~NodeEditor()
+    {
+        MS_TRACE("Save Data...");
+        Save();
+    }
+    void NodeEditor::Show()
 	{
         ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 

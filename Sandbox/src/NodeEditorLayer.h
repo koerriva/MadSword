@@ -29,7 +29,8 @@ namespace App {
 
 	class NodeEditor {
 	public:
-		NodeEditor() :nodes_(), links_(), current_id_(0) {};
+		NodeEditor();
+		~NodeEditor();
 		void Show();
 		void Save();
 		void Load();
@@ -43,4 +44,10 @@ namespace App {
 
 		bool				m_OpenAboutWind = false;
 	};
+
+	void NodeEditorInitialize();
+
+	void NodeEditorShow();
+
+	void NodeEditorShutdown();
 }

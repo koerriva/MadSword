@@ -35,18 +35,25 @@ public:
 		ImNodes::StyleColorsDark();
 		ImNodesIO& io = ImNodes::GetIO();
 		ImNodesStyle& style = ImNodes::GetStyle();
+		ImNodes::GetIO().LinkDetachWithModifierClick.Modifier = &ImGui::GetIO().KeyCtrl;
+		ImNodes::PushAttributeFlag(ImNodesAttributeFlags_EnableLinkDetachWithDragClick);
 
+		//m_NodeEditor->Load();
+		App::NodeEditorInitialize();
 	}
 	void OnDeAttach() override {
-		m_NodeEditor->Save();
+		//m_NodeEditor->Save();
 
+		App::NodeEditorShutdown();
 		ImNodes::DestroyContext();
 	}
 	void OnEvent(MadSword::Event& e) override {
 		
 	}
 	void OnImGuiRender() override {
-		m_NodeEditor->Show();
+		//m_NodeEditor->Show();
+		
+		App::NodeEditorShow();
 	}
 private:
 	std::unique_ptr<App::NodeEditor> m_NodeEditor;
