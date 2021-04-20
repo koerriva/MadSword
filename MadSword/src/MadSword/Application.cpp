@@ -2,10 +2,11 @@
 #include "Application.h"
 #include "Log.h"
 #include "Input.h"
+#include <glad/glad.h>
 
 namespace MadSword {
 	Application* Application::s_Instance = nullptr;
-
+	unsigned int vao;
 	Application::Application(){
 		MS_CORE_ASSERT(!s_Instance, "程序实例已存在");
 		s_Instance = this;
@@ -13,28 +14,50 @@ namespace MadSword {
 		m_Window->SetEventCallback(MS_BIND_EVENT_FN(Application::OnEvent));
 
 		m_ImGuiLayer = new ImGuiLayer();
-
 		PushOverlay(m_ImGuiLayer);
+
+		glGenVertexArrays(1,&vao);
+		glBindVertexArray(vao);
+		float vertices[3 * 7] = {
+			-0.5f,-0.5f,0.0f,1.0f,0.0f,0.0f,1.0f,
+			0.5f,-0.5f,0.0f,0.0f,1.0f,0.0f,1.0f,
+			0.0f,0.5f,0.0f,0.0f,0.0f,1.0f,1.0f,
+		};
+		m_VertexBuffer.reset(VertexBuffer::Create(vertices,9*sizeof(float)));
+
+		BufferLayout layout = {
+			{ShaderDataType::Vec3f,"position"},
+			{ShaderDataType::Vec4f,"color"},
+		};
+		m_VertexBuffer->SetLayout(layout);
+
+		unsigned int indices[3] = { 0,1,2 };
+		m_IndexBuffer.reset(IndexBuffer::Create(indices, 3 * sizeof(unsigned int)));
+
+		glBindVertexArray(0);
 
 		const std::string vert = R"(
 			#version 410 core
 			layout(location=0) in vec3 position; 
-			out vec4 vertColor;
-			out vec3 vertPos;
+			layout(location=1) in vec4 color;
+
+			out vec4 v_Color;
+			out vec3 v_Pos;
+
 			void main(){
-				vertColor = vec4(1.);
-				vertPos = position;
+				v_Color = color;
+				v_Pos = position;
 				gl_Position = vec4(position,1.0);
 			}
 		)";
 		const std::string frag = R"(
 			#version 410 core
 
-			in vec3 vertPos;
-			in vec4 vertColor;
+			in vec3 v_Pos;
+			in vec4 v_Color;
 
 			void main(){
-				gl_FragColor = vertColor;
+				gl_FragColor = v_Color;
 			}
 		)";
 		m_Shader.reset(Shader::Create(vert,frag));
@@ -44,6 +67,12 @@ namespace MadSword {
 	void Application::Run() {
 		while (m_Running) {
 			m_Window->ClearFramebuffer();
+
+			glBindVertexArray(vao);
+			m_Shader->Bind();
+			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+			m_Shader->UnBind();
+			glBindVertexArray(0);
 
 			for each (Layer * layer in m_LayerStack)
 			{

@@ -8,6 +8,7 @@
 
 #include "ImGui/ImGuiLayer.h"
 #include <MadSword/Renderer/Shader.h>
+#include <MadSword/Renderer/Buffer.h>
 namespace MadSword {
 	class Application
 	{
@@ -31,6 +32,8 @@ namespace MadSword {
 		LayerStack m_LayerStack;
 
 		std::unique_ptr<Shader> m_Shader;
+		std::unique_ptr<VertexBuffer> m_VertexBuffer;
+		std::unique_ptr<IndexBuffer> m_IndexBuffer;
 	private:
 		static Application* s_Instance;
 	};

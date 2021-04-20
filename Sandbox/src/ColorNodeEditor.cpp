@@ -139,7 +139,7 @@ namespace App
 
             void show()
             {
-                ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+                //ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 
                 ImGuiIO& io = ImGui::GetIO();
                 

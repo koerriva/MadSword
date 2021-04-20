@@ -9,10 +9,13 @@ namespace MadSword {
 		OpenGLVertexBuffer(float* vertices, unsigned int size);
 		virtual ~OpenGLVertexBuffer();
 
-		virtual void Bind() override;
-		virtual void UnBind() override;
+		virtual void Bind() const override;
+		virtual void UnBind() const override;
+		virtual void SetLayout(const BufferLayout& layout) override;
+		virtual const BufferLayout& GetLayout() const override;
 	private:
 		unsigned int m_RendererID;
+		BufferLayout m_Layout;
 	};
 
 	class OpenGLIndexBuffer : public IndexBuffer{
@@ -20,10 +23,10 @@ namespace MadSword {
 		OpenGLIndexBuffer(unsigned int* indices, unsigned int size);
 		virtual ~OpenGLIndexBuffer(){}
 
-		virtual void Bind() override;
-		virtual void UnBind() override;
+		virtual void Bind() const override;
+		virtual void UnBind() const override;
 
-		virtual unsigned int GetCount() { return m_Count; }
+		virtual unsigned int GetCount() const { return m_Count; }
 	private:
 		unsigned int m_RendererID;
 		unsigned int m_Count;
