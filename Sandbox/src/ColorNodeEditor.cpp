@@ -149,7 +149,7 @@ namespace App
         {
         public:
             ColorNodeEditor() : graph_(), nodes_(), root_node_id_(-1) {}
-            ~ColorNodeEditor() {}
+            ~ColorNodeEditor() = default;
             void show()
             {
                 //ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());

@@ -8,7 +8,7 @@ namespace MadSword {
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::OpenGL:return new OpenGLShader(vertSrc,fragSrc);
+		case RendererAPI::API::OpenGL:return new OpenGLShader(vertSrc,fragSrc);
 		default:
 			break;
 		}

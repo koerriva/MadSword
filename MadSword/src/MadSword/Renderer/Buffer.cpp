@@ -9,7 +9,7 @@ namespace MadSword{
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::OpenGL:
+		case RendererAPI::API::OpenGL:
 			return new OpenGLVertexBuffer(vertices, size);
 		default:
 			MS_CORE_ASSERT(false, "RendererAPI Not Support Yet!");
@@ -22,7 +22,7 @@ namespace MadSword{
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::OpenGL:
+		case RendererAPI::API::OpenGL:
 			return new OpenGLIndexBuffer(indices, size);
 		default:
 			MS_CORE_ASSERT(false, "RendererAPI Not Support Yet!");

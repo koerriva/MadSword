@@ -4,18 +4,20 @@
 #include "Input.h"
 #include <glad/glad.h>
 
+#include "Renderer/RenderCommand.h"
+#include "Renderer/Renderer.h"
+
 namespace MadSword {
 	Application* Application::s_Instance = nullptr;
 	Application::Application(){
-		MS_CORE_ASSERT(!s_Instance, "程序实例已存在");
+		MS_CORE_ASSERT(!s_Instance, u8"程序实例已存在");
 		s_Instance = this;
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->SetEventCallback(MS_BIND_EVENT_FN(Application::OnEvent));
 
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
-
-		//m_VertexArray.reset(VertexArray::Create());
+		
 		m_SquadVA.reset(VertexArray::Create());
 
 		float vertices[4 * 7] = {
@@ -24,22 +26,17 @@ namespace MadSword {
 			0.5f,0.5f,0.0f,1.0f,0.0f,1.0f,1.0f,
 			-0.5f,0.5f,0.0f,1.0f,0.0f,1.0f,1.0f,
 		};
-		//m_VertexBuffer.reset(VertexBuffer::Create(vertices,sizeof(vertices)));
 		std::shared_ptr<VertexBuffer> m_SquadVB;
 		m_SquadVB.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
 
-		BufferLayout layout = {
+		const BufferLayout layout = {
 			{ShaderDataType::Vec3f,"position"},
 			{ShaderDataType::Vec4f,"color"},
 		};
-		//m_VertexBuffer->SetLayout(layout);
-		//m_VertexArray->AddVertexBuffer(m_VertexBuffer);
 		m_SquadVB->SetLayout(layout);
 		m_SquadVA->AddVertexBuffer(m_SquadVB);
 
 		unsigned int indices[6] = { 0,1,2,0,2,3 };
-		//m_IndexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices)));
-		//m_VertexArray->AddIndexBuffer(m_IndexBuffer);
 		std::shared_ptr<IndexBuffer> m_SquadEB;
 		m_SquadEB.reset(IndexBuffer::Create(indices, sizeof(indices)));
 		m_SquadVA->AddIndexBuffer(m_SquadEB);
@@ -70,17 +67,25 @@ namespace MadSword {
 		)";
 		m_Shader.reset(Shader::Create(vert,frag));
 	}
-	Application::~Application(){}
+	Application::~Application() = default;
 
 	void Application::Run() {
 		while (m_Running) {
 			m_Window->ClearFramebuffer();
 
+			RenderCommand::SetClearColor({ 0.2f, 0.3f, 0.1f, 1.0f });
+			RenderCommand::Clear();
+
+			Renderer::BeginScene();
+
 			m_Shader->Bind();
-			//m_VertexArray->Bind();
-			//glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
-			m_SquadVA->Bind();
-			glDrawElements(GL_TRIANGLES, m_SquadVA->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+			Renderer::Submit(m_SquadVA);
+
+			Renderer::EndScene();
+
+			//m_Shader->Bind();
+			//m_SquadVA->Bind();
+			//glDrawElements(GL_TRIANGLES, m_SquadVA->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 
 			for each (Layer * layer in m_LayerStack)
 			{
