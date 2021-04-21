@@ -16,14 +16,15 @@ namespace MadSword {
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
 
-		glGenVertexArrays(1,&vao);
+		glCreateVertexArrays(1, &vao);
 		glBindVertexArray(vao);
-		float vertices[3 * 7] = {
-			-0.5f,-0.5f,0.0f,1.0f,0.0f,0.0f,1.0f,
-			0.5f,-0.5f,0.0f,0.0f,1.0f,0.0f,1.0f,
-			0.0f,0.5f,0.0f,0.0f,0.0f,1.0f,1.0f,
+		float vertices[4 * 7] = {
+			-0.5f,-0.5f,0.0f,1.0f,1.0f,0.0f,1.0f,
+			0.5f,-0.5f,0.0f,0.0f,1.0f,1.0f,1.0f,
+			0.5f,0.5f,0.0f,1.0f,0.0f,1.0f,1.0f,
+			-0.5f,0.5f,0.0f,1.0f,0.0f,1.0f,1.0f,
 		};
-		m_VertexBuffer.reset(VertexBuffer::Create(vertices,21*sizeof(float)));
+		m_VertexBuffer.reset(VertexBuffer::Create(vertices,sizeof(vertices)));
 
 		BufferLayout layout = {
 			{ShaderDataType::Vec3f,"position"},
@@ -31,8 +32,8 @@ namespace MadSword {
 		};
 		m_VertexBuffer->SetLayout(layout);
 
-		unsigned int indices[3] = { 0,1,2 };
-		m_IndexBuffer.reset(IndexBuffer::Create(indices, 3 * sizeof(unsigned int)));
+		unsigned int indices[6] = { 0,1,2,0,2,3 };
+		m_IndexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices)));
 
 		glBindVertexArray(0);
 
@@ -70,7 +71,7 @@ namespace MadSword {
 
 			glBindVertexArray(vao);
 			m_Shader->Bind();
-			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+			glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
 			m_Shader->UnBind();
 			glBindVertexArray(0);
 
