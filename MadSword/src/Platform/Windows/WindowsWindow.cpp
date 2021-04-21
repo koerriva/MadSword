@@ -59,6 +59,13 @@ namespace MadSword {
 
         m_Window = glfwCreateWindow(props.Width, props.Height, props.Title.c_str(), nullptr, nullptr);
 
+        GLFWmonitor* m_PrimaryMOnitor = glfwGetPrimaryMonitor();
+        const GLFWvidmode* vm = glfwGetVideoMode(m_PrimaryMOnitor);
+        
+        int posX = (vm->width - props.Width) / 2;
+        int posY = (vm->height - props.Height) / 2;
+        glfwSetWindowPos(m_Window, posX, posY);
+
         m_Context = new OpenGLContext(m_Window);
         m_Context->Init();
 
