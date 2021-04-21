@@ -6,7 +6,6 @@
 
 namespace MadSword {
 	Application* Application::s_Instance = nullptr;
-	unsigned int vao;
 	Application::Application(){
 		MS_CORE_ASSERT(!s_Instance, "程序实例已存在");
 		s_Instance = this;
@@ -16,26 +15,34 @@ namespace MadSword {
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
 
-		glCreateVertexArrays(1, &vao);
-		glBindVertexArray(vao);
+		//m_VertexArray.reset(VertexArray::Create());
+		m_SquadVA.reset(VertexArray::Create());
+
 		float vertices[4 * 7] = {
 			-0.5f,-0.5f,0.0f,1.0f,1.0f,0.0f,1.0f,
 			0.5f,-0.5f,0.0f,0.0f,1.0f,1.0f,1.0f,
 			0.5f,0.5f,0.0f,1.0f,0.0f,1.0f,1.0f,
 			-0.5f,0.5f,0.0f,1.0f,0.0f,1.0f,1.0f,
 		};
-		m_VertexBuffer.reset(VertexBuffer::Create(vertices,sizeof(vertices)));
+		//m_VertexBuffer.reset(VertexBuffer::Create(vertices,sizeof(vertices)));
+		std::shared_ptr<VertexBuffer> m_SquadVB;
+		m_SquadVB.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
 
 		BufferLayout layout = {
 			{ShaderDataType::Vec3f,"position"},
 			{ShaderDataType::Vec4f,"color"},
 		};
-		m_VertexBuffer->SetLayout(layout);
+		//m_VertexBuffer->SetLayout(layout);
+		//m_VertexArray->AddVertexBuffer(m_VertexBuffer);
+		m_SquadVB->SetLayout(layout);
+		m_SquadVA->AddVertexBuffer(m_SquadVB);
 
 		unsigned int indices[6] = { 0,1,2,0,2,3 };
-		m_IndexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices)));
-
-		glBindVertexArray(0);
+		//m_IndexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices)));
+		//m_VertexArray->AddIndexBuffer(m_IndexBuffer);
+		std::shared_ptr<IndexBuffer> m_SquadEB;
+		m_SquadEB.reset(IndexBuffer::Create(indices, sizeof(indices)));
+		m_SquadVA->AddIndexBuffer(m_SquadEB);
 
 		const std::string vert = R"(
 			#version 410 core
@@ -69,11 +76,11 @@ namespace MadSword {
 		while (m_Running) {
 			m_Window->ClearFramebuffer();
 
-			glBindVertexArray(vao);
 			m_Shader->Bind();
-			glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
-			m_Shader->UnBind();
-			glBindVertexArray(0);
+			//m_VertexArray->Bind();
+			//glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
+			m_SquadVA->Bind();
+			glDrawElements(GL_TRIANGLES, m_SquadVA->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 
 			for each (Layer * layer in m_LayerStack)
 			{
