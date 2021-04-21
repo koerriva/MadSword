@@ -1,8 +1,6 @@
 #include "mspch.h"
 #include "Application.h"
 #include "Log.h"
-#include "Input.h"
-#include <glad/glad.h>
 
 #include "Renderer/RenderCommand.h"
 #include "Renderer/Renderer.h"
@@ -71,19 +69,17 @@ namespace MadSword {
 
 	void Application::Run() {
 		while (m_Running) {
-			RenderCommand::SetClearColor({ 0.2f, 0.3f, 0.1f, 1.0f });
-			RenderCommand::Clear();
+			{
+				RenderCommand::SetClearColor({ 0.2f, 0.3f, 0.1f, 1.0f });
+				RenderCommand::Clear();
 
-			Renderer::BeginScene();
+				Renderer::BeginScene();
 
-			m_Shader->Bind();
-			Renderer::Submit(m_SquadVA);
+				m_Shader->Bind();
+				Renderer::Submit(m_SquadVA);
 
-			Renderer::EndScene();
-
-			//m_Shader->Bind();
-			//m_SquadVA->Bind();
-			//glDrawElements(GL_TRIANGLES, m_SquadVA->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+				Renderer::EndScene();
+			}
 
 			for each (Layer * layer in m_LayerStack)
 			{
