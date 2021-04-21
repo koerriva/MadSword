@@ -71,8 +71,6 @@ namespace MadSword {
 
 	void Application::Run() {
 		while (m_Running) {
-			m_Window->ClearFramebuffer();
-
 			RenderCommand::SetClearColor({ 0.2f, 0.3f, 0.1f, 1.0f });
 			RenderCommand::Clear();
 
