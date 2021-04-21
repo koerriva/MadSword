@@ -59,9 +59,35 @@ namespace App
         // Lookup
 
         iterator       find(int id);
-        const_iterator find(int id) const;
+        const_iterator  find(int id) const;
         bool           contains(int id) const;
 
+
+        // Save
+        void Save(std::fstream& fout) {
+            const size_t num_ele = elements_.size();
+            fout.write(reinterpret_cast<const char*>(&num_ele), static_cast<std::streamsize>(sizeof(size_t)));
+            fout.write(reinterpret_cast<const char*>(elements_.data()), static_cast<std::streamsize>(sizeof(ElementType) * num_ele));
+
+            const size_t num_ids = sorted_ids_.size();
+            fout.write(reinterpret_cast<const char*>(&num_ids), static_cast<std::streamsize>(sizeof(size_t)));
+            fout.write(reinterpret_cast<const char*>(sorted_ids_.data()), static_cast<std::streamsize>(sizeof(int) * num_ids));
+        }
+
+        // Load
+        void Load(std::fstream& fin) {
+            elements_ = std::vector<ElementType>();
+            size_t num_ele;
+            fin.read(reinterpret_cast<char*>(&num_ele), static_cast<std::streamsize>(sizeof(size_t)));
+            elements_.resize(num_ele);
+            fin.read(reinterpret_cast<char*>(elements_.data()), static_cast<std::streamsize>(sizeof(ElementType) * num_ele));
+
+            sorted_ids_ = std::vector<int>();
+            size_t num_ids;
+            fin.read(reinterpret_cast<char*>(&num_ids), static_cast<std::streamsize>(sizeof(size_t)));
+            sorted_ids_.resize(num_ids);
+            fin.read(reinterpret_cast<char*>(sorted_ids_.data()), static_cast<std::streamsize>(sizeof(int) * num_ids));
+        }
     private:
         std::vector<ElementType> elements_;
         std::vector<int>         sorted_ids_;
@@ -190,6 +216,23 @@ namespace App
         Span<const int>  neighbors(int node_id) const;
         Span<const Edge> edges() const;
 
+        void Save(std::fstream& fout) {
+            // save nodes_
+            fout.write(reinterpret_cast<const char*>(&current_id_), static_cast<std::streamsize>(sizeof(int)));
+            nodes_.Save(fout);
+            edges_from_node_.Save(fout);
+            node_neighbors_.Save(fout);
+            edges_.Save(fout);
+        }
+
+        void Load(std::fstream& fin) {
+            // load nodes_
+            fin.read(reinterpret_cast<char*>(&current_id_), static_cast<std::streamsize>(sizeof(int)));
+            nodes_.Load(fin);
+            edges_from_node_.Load(fin);
+            node_neighbors_.Load(fin);
+            edges_.Load(fin);
+        }
         // Capacity
 
         size_t num_edges_from_node(int node_id) const;

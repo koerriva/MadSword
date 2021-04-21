@@ -39,12 +39,12 @@ public:
 		ImNodes::PushAttributeFlag(ImNodesAttributeFlags_EnableLinkDetachWithDragClick);
 
 		//m_NodeEditor->Load();
-		App::NodeEditorInitialize();
+		App::NodeEditorLoad();
 	}
 	void OnDeAttach() override {
 		//m_NodeEditor->Save();
 
-		App::NodeEditorShutdown();
+		//App::NodeEditorSave();
 		ImNodes::DestroyContext();
 	}
 	void OnEvent(MadSword::Event& e) override {

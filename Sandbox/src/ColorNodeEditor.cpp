@@ -6,8 +6,14 @@
 #include <chrono>
 #include <cmath>
 #include <vector>
+#include <fstream>
+
+#include <json/json.hpp>
+using json = nlohmann::json;
 
 #include <MadSword/KeyCodes.h>
+#include <MadSword/MouseCodes.h>
+#include <MadSword/Log.h>
 
 namespace App
 {
@@ -30,7 +36,9 @@ namespace App
             NodeType type;
             float    value;
 
-            explicit Node(const NodeType t) : type(t), value(0.f) {}
+            Node() :type(NodeType::value), value(0.f) {}
+
+            Node(const NodeType t) : type(t), value(0.f) {}
 
             Node(const NodeType t, const float v) : type(t), value(v) {}
         };
@@ -55,9 +63,8 @@ namespace App
             {
                 const int id = postorder.top();
                 postorder.pop();
-                const Node node = graph.node(id);
 
-                switch (node.type)
+                switch (const Node & node = graph.node(id); node.type)
                 {
                 case NodeType::add:
                 {
@@ -92,15 +99,21 @@ namespace App
                 break;
                 case NodeType::input:
                 {
-                    value_stack.push(1);
+                    value_stack.push(1.0);
                 }
                 break;
                 case NodeType::neural:
                 {
-                    const float x = value_stack.top();
-                    value_stack.pop();
-                    const float res = x * 0.5f;
-                    value_stack.push(res);
+	                const size_t len = 8;
+                    float output = 0.0f;
+                    for (size_t i = 0; i < len; i++)
+                    {
+                        const float x = value_stack.top();
+                        value_stack.pop();
+
+                        output += x * 0.5f;
+                    }
+                    value_stack.push(output);
                 }
                 break;
                 case NodeType::value:
@@ -122,11 +135,11 @@ namespace App
             // The final output node isn't evaluated in the loop -- instead we just pop
             // the three values which should be in the stack.
             assert(value_stack.size() == 3ull);
-            const int b = static_cast<int>(255.f * clamp(value_stack.top(), 0.f, 1.f) + 0.5f);
+            const int b = static_cast<int>(clamp(value_stack.top(), 0.f, 1.f) * 255.f + 0.5f);
             value_stack.pop();
-            const int g = static_cast<int>(255.f * clamp(value_stack.top(), 0.f, 1.f) + 0.5f);
+            const int g = static_cast<int>(clamp(value_stack.top(), 0.f, 1.f) * 255.f + 0.5f);
             value_stack.pop();
-            const int r = static_cast<int>(255.f * clamp(value_stack.top(), 0.f, 1.f) + 0.5f);
+            const int r = static_cast<int>(clamp(value_stack.top(), 0.f, 1.f) * 255.f + 0.5f);
             value_stack.pop();
 
             return IM_COL32(r, g, b, 255);
@@ -136,10 +149,10 @@ namespace App
         {
         public:
             ColorNodeEditor() : graph_(), nodes_(), root_node_id_(-1) {}
-
+            ~ColorNodeEditor() {}
             void show()
             {
-                //ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+                ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 
                 ImGuiIO& io = ImGui::GetIO();
                 
@@ -167,7 +180,7 @@ namespace App
                 {
                     const bool open_popup = ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows) &&
                         ImNodes::IsEditorHovered() &&
-                        ImGui::IsKeyReleased(MadSword::Key::A);
+                        (ImGui::IsKeyReleased(MadSword::Key::A)||ImGui::IsMouseClicked(MadSword::Mouse::Button1));
 
                     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8.f, 8.f));
                     if (!ImGui::IsAnyItemHovered() && open_popup)
@@ -279,11 +292,20 @@ namespace App
 
                             UiNode ui_node;
                             ui_node.type = UiNodeType::neural;
-                            ui_node.neural.input = graph_.insert_node(value);
+                            
+                            size_t len = sizeof(ui_node.neural.synapse) / sizeof(int);
+                            for (size_t i = 0; i < len; i++)
+                            {
+                                ui_node.neural.synapse[i] = graph_.insert_node(value);
+                            }
+                            
                             ui_node.id = graph_.insert_node(op);
 
-                            graph_.insert_edge(ui_node.id, ui_node.neural.input);
-
+                            for (size_t i = 0; i < len; i++)
+                            {
+                                graph_.insert_edge(ui_node.id, ui_node.neural.synapse[i]);
+                            }
+                            
                             nodes_.push_back(ui_node);
                             ImNodes::SetNodeScreenSpacePos(ui_node.id, click_pos);
                         }
@@ -547,18 +569,22 @@ namespace App
                         ImNodes::EndNodeTitleBar();
 
                         {
-                            ImNodes::BeginInputAttribute(node.neural.input);
-                            const float label_width = ImGui::CalcTextSize("weight").x;
-                            ImGui::TextUnformatted("weight");
-                            if (graph_.num_edges_from_node(node.neural.input) == 0ull)
+                            size_t len = sizeof(node.neural.synapse) / sizeof(int);
+                            for (size_t i = 0; i < len; i++)
                             {
-                                ImGui::SameLine();
-                                ImGui::PushItemWidth(node_width - label_width);
-                                ImGui::DragFloat(
-                                    "##hidelabel", &graph_.node(node.neural.input).value, 0.01f, 0.f, 1.0f);
-                                ImGui::PopItemWidth();
+                                ImNodes::BeginInputAttribute(node.neural.synapse[i]);
+                                const float label_width = ImGui::CalcTextSize("synapse").x;
+                                ImGui::Text("synapse %d", i);
+                                if (graph_.num_edges_from_node(node.neural.synapse[i]) == 0ull)
+                                {
+                                    ImGui::SameLine();
+                                    ImGui::PushItemWidth(node_width - label_width);
+                                    ImGui::DragFloat(
+                                        "##hidelabel", &graph_.node(node.neural.synapse[i]).value, 0.01f, 0.f, 1.0f);
+                                    ImGui::PopItemWidth();
+                                }
+                                ImNodes::EndInputAttribute();
                             }
-                            ImNodes::EndInputAttribute();
                         }
 
                         ImGui::Spacing();
@@ -693,8 +719,56 @@ namespace App
                 ImGui::Begin("output color");
                 ImGui::End();
                 ImGui::PopStyleColor();
+
+                if (ImGui::IsKeyPressed(MadSword::Key::F5)) {
+                    MS_TRACE("Save Editor Data...");
+                    Save();
+                }
             }
 
+            void Save() {
+                // Save the internal imnodes state
+                ImNodes::SaveCurrentEditorStateToIniFile("neural_editor.ini");
+
+                // Dump our editor state as bytes into a file
+
+                std::fstream fout("neural_editor.bytes", std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
+
+                // copy the node vector to file
+                const size_t num_nodes = nodes_.size();
+                fout.write(reinterpret_cast<const char*>(&num_nodes),static_cast<std::streamsize>(sizeof(size_t)));
+                fout.write(reinterpret_cast<const char*>(nodes_.data()),static_cast<std::streamsize>(sizeof(UiNode) * num_nodes));
+
+                graph_.Save(fout);
+
+                fout.write(reinterpret_cast<const char*>(&root_node_id_), static_cast<std::streamsize>(sizeof(int)));
+            }
+
+            void Load() {
+                // Load the internal imnodes state
+                ImNodes::LoadCurrentEditorStateFromIniFile("neural_editor.ini");
+
+                // Load our editor state into memory
+
+                std::fstream fin("neural_editor.bytes", std::ios_base::in | std::ios_base::binary);
+
+                if (!fin.is_open())
+                {
+                    return;
+                }
+
+                // copy nodes into memory
+                size_t num_nodes;
+                fin.read(reinterpret_cast<char*>(&num_nodes), static_cast<std::streamsize>(sizeof(size_t)));
+                nodes_.resize(num_nodes);
+                fin.read(reinterpret_cast<char*>(nodes_.data()), static_cast<std::streamsize>(sizeof(UiNode) * num_nodes));
+
+                // copy graph into memory
+                graph_.Load(fin);
+
+                // copy current_id into memory
+                fin.read(reinterpret_cast<char*>(&root_node_id_), static_cast<std::streamsize>(sizeof(int)));
+            }
         private:
             enum class UiNodeType
             {
@@ -739,7 +813,8 @@ namespace App
 
                     struct
                     {
-                        int input;
+                        int synapse[8];
+                        int size;
                     } neural;
                 };
             };
@@ -759,6 +834,10 @@ namespace App
     }
 
     void NodeEditorShow() { Demo::color_editor.show(); }
+
+    void NodeEditorSave() { Demo::color_editor.Save(); }
+
+    void NodeEditorLoad() { Demo::color_editor.Load(); }
 
     void NodeEditorShutdown() {}
 } // namespace example

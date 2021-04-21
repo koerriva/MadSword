@@ -49,5 +49,9 @@ namespace App {
 
 	void NodeEditorShow();
 
+	void NodeEditorSave();
+
+	void NodeEditorLoad();
+
 	void NodeEditorShutdown();
 }

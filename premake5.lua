@@ -118,7 +118,8 @@ project "Sandbox"
         files--该项目的文件
         {
             "%{prj.name}/src/**.h",
-            "%{prj.name}/src/**.cpp"
+            "%{prj.name}/src/**.cpp",
+            "%{prj.name}/src/**.hpp"
         }
 
         defines
