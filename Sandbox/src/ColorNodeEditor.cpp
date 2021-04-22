@@ -35,12 +35,15 @@ namespace App
         {
             NodeType type;
             float    value;
+            float    weight;
 
-            Node() :type(NodeType::value), value(0.f) {}
+            Node() :type(NodeType::value), value(0.f), weight(0.f) {}
 
-            Node(const NodeType t) : type(t), value(0.f) {}
+            Node(const NodeType t) : type(t), value(0.f), weight(0.f) {}
 
-            Node(const NodeType t, const float v) : type(t), value(v) {}
+            Node(const NodeType t, const float v) : type(t), value(v), weight(0.f) {}
+
+            Node(const NodeType t, const float v, const float w) :type(t), value(v), weight(w) {}
         };
 
         template<class T>
@@ -58,7 +61,7 @@ namespace App
             dfs_traverse(
                 graph, root_node, [&postorder](const int node_id) -> void { postorder.push(node_id); });
 
-            std::stack<float> value_stack;
+            std::stack<std::pair<float,float>> value_stack;
             while (!postorder.empty())
             {
                 const int id = postorder.top();
@@ -68,52 +71,54 @@ namespace App
                 {
                 case NodeType::add:
                 {
-                    const float rhs = value_stack.top();
+                    const auto [rhs,rw] = value_stack.top();
                     value_stack.pop();
-                    const float lhs = value_stack.top();
+                    const auto [lhs,lw] = value_stack.top();
                     value_stack.pop();
-                    value_stack.push(lhs + rhs);
+                    value_stack.push(std::make_pair(lhs + rhs, node.weight));
                 }
                 break;
                 case NodeType::multiply:
                 {
-                    const float rhs = value_stack.top();
+                    const auto [rhs, rw] = value_stack.top();
                     value_stack.pop();
-                    const float lhs = value_stack.top();
+                    const auto [lhs, lw] = value_stack.top();
                     value_stack.pop();
-                    value_stack.push(rhs * lhs);
+                    value_stack.push(std::make_pair(lhs + rhs, node.weight));
                 }
                 break;
                 case NodeType::sine:
                 {
-                    const float x = value_stack.top();
+                    const auto [x,w] = value_stack.top();
                     value_stack.pop();
                     const float res = std::abs(std::sin(x));
-                    value_stack.push(res);
+                    value_stack.push(std::make_pair(res,node.weight));
                 }
                 break;
                 case NodeType::time:
                 {
-                    value_stack.push(current_time_seconds);
+                    value_stack.push(std::make_pair(current_time_seconds,node.weight));
                 }
                 break;
                 case NodeType::input:
                 {
-                    value_stack.push(1.0);
+                    const float in = node.value;
+                    value_stack.push(std::make_pair(in,node.weight));
                 }
                 break;
                 case NodeType::neural:
                 {
+                	
 	                const size_t len = 8;
                     float output = 0.0f;
                     for (size_t i = 0; i < len; i++)
                     {
-                        const float x = value_stack.top();
+                        const auto [x,w] = value_stack.top();
                         value_stack.pop();
 
-                        output += x * 0.5f;
+                        output += 1 * w;
                     }
-                    value_stack.push(output);
+                    value_stack.push(std::make_pair(output,node.weight));
                 }
                 break;
                 case NodeType::value:
@@ -123,7 +128,7 @@ namespace App
                     // the value comes from the node's UI.
                     if (graph.num_edges_from_node(id) == 0ull)
                     {
-                        value_stack.push(node.value);
+                        value_stack.push(std::make_pair(node.value,node.weight));
                     }
                 }
                 break;
@@ -135,11 +140,11 @@ namespace App
             // The final output node isn't evaluated in the loop -- instead we just pop
             // the three values which should be in the stack.
             assert(value_stack.size() == 3ull);
-            const int b = static_cast<int>(clamp(value_stack.top(), 0.f, 1.f) * 255.f + 0.5f);
+            const int b = static_cast<int>(clamp(value_stack.top().first, 0.f, 1.f) * 255.f + 0.5f);
             value_stack.pop();
-            const int g = static_cast<int>(clamp(value_stack.top(), 0.f, 1.f) * 255.f + 0.5f);
+            const int g = static_cast<int>(clamp(value_stack.top().first, 0.f, 1.f) * 255.f + 0.5f);
             value_stack.pop();
-            const int r = static_cast<int>(clamp(value_stack.top(), 0.f, 1.f) * 255.f + 0.5f);
+            const int r = static_cast<int>(clamp(value_stack.top().first, 0.f, 1.f) * 255.f + 0.5f);
             value_stack.pop();
 
             return IM_COL32(r, g, b, 255);
@@ -279,7 +284,7 @@ namespace App
                         {
                             UiNode ui_node;
                             ui_node.type = UiNodeType::input;
-                            ui_node.id = graph_.insert_node(Node(NodeType::input,1.0f));
+                            ui_node.id = graph_.insert_node(Node(NodeType::input));
 
                             nodes_.push_back(ui_node);
                             ImNodes::SetNodeScreenSpacePos(ui_node.id, click_pos);
@@ -287,7 +292,7 @@ namespace App
 
                         if (ImGui::MenuItem("neural"))
                         {
-                            const Node value(NodeType::value, 0.f);
+                            const Node value(NodeType::value);
                             const Node op(NodeType::neural);
 
                             UiNode ui_node;
@@ -297,6 +302,7 @@ namespace App
                             for (size_t i = 0; i < len; i++)
                             {
                                 ui_node.neural.synapse[i] = graph_.insert_node(value);
+                                ui_node.neural.synapse_weight[i] = 0;
                             }
                             
                             ui_node.id = graph_.insert_node(op);
@@ -315,7 +321,7 @@ namespace App
                     ImGui::PopStyleVar();
                 }
 
-                for (const UiNode& node : nodes_)
+                for (UiNode& node : nodes_)
                 {
                     switch (node.type)
                     {
@@ -548,9 +554,18 @@ namespace App
                         ImGui::TextUnformatted("input");
                         ImNodes::EndNodeTitleBar();
 
+                        ImNodes::BeginInputAttribute(node.id);
+
                         ImGui::PushItemWidth(node_width);
-                        ImGui::DragFloat("##hidelabel", &graph_.node(node.id).value, 0.01f, 0.f, 1.0f);
+                        if(ImGui::DragFloat("##hidelabel", &graph_.node(node.id).value, 0.001f, 0.f, 1.0f))
+                        {
+                            MS_TRACE("change input {}",graph_.node(node.id).value);
+                        }
                         ImGui::PopItemWidth();
+
+                        ImNodes::EndInputAttribute();
+
+                        ImGui::Spacing();
 
                         ImNodes::BeginOutputAttribute(node.id);
                         ImGui::Text("output");
@@ -575,14 +590,18 @@ namespace App
                                 ImNodes::BeginInputAttribute(node.neural.synapse[i]);
                                 const float label_width = ImGui::CalcTextSize("synapse").x;
                                 ImGui::Text("synapse %d", i);
-                                if (graph_.num_edges_from_node(node.neural.synapse[i]) == 0ull)
-                                {
+                                //if (graph_.num_edges_from_node(node.neural.synapse[i]) == 0ull)
+                                //{
                                     ImGui::SameLine();
                                     ImGui::PushItemWidth(node_width - label_width);
-                                    ImGui::DragFloat(
-                                        "##hidelabel", &graph_.node(node.neural.synapse[i]).value, 0.01f, 0.f, 1.0f);
+                                    if(ImGui::DragFloat("##hidelabel", &graph_.node(node.neural.synapse[i]).weight, 0.001f, 0.f, 1.0f))
+                                    {
+                                        const float w = graph_.node(node.neural.synapse[i]).weight;
+                                        node.neural.synapse_weight[i] = w;
+                                        MS_TRACE("change synapse {} {}", i, w);
+                                    }
                                     ImGui::PopItemWidth();
-                                }
+                                //}
                                 ImNodes::EndInputAttribute();
                             }
                         }
@@ -820,10 +839,17 @@ namespace App
                         int input;
                     } sine;
 
+                	struct
+                	{
+                        int input;
+                        float weight;
+                	} cell;
+                	
                     struct
                     {
                         int synapse[8];
-                        int size;
+                        float synapse_weight[8];
+                        float weight;
                     } neural;
                 };
             };
