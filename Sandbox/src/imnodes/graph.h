@@ -2,11 +2,13 @@
 
 #include <algorithm>
 #include <cassert>
+#include <fstream>
 #include <iterator>
 #include <stack>
 #include <stddef.h>
 #include <utility>
 #include <vector>
+#include <unordered_map>
 
 namespace App
 {
@@ -74,6 +76,23 @@ namespace App
             fout.write(reinterpret_cast<const char*>(sorted_ids_.data()), static_cast<std::streamsize>(sizeof(int) * num_ids));
         }
 
+    	void SaveVector(std::fstream& fout)
+        {
+            const size_t num_ele = elements_.size();
+            size_t byte_size = 0;
+            for (const std::vector<int>& element : elements())
+            {
+                byte_size += sizeof(int) * element.size();
+            }
+            fout.write(reinterpret_cast<const char*>(&num_ele), static_cast<std::streamsize>(sizeof(size_t)));
+            fout.write(reinterpret_cast<const char*>(&byte_size), static_cast<std::streamsize>(sizeof(size_t)));
+            fout.write(reinterpret_cast<const char*>(elements_.data()), static_cast<std::streamsize>(byte_size));
+
+            const size_t num_ids = sorted_ids_.size();
+            fout.write(reinterpret_cast<const char*>(&num_ids), static_cast<std::streamsize>(sizeof(size_t)));
+            fout.write(reinterpret_cast<const char*>(sorted_ids_.data()), static_cast<std::streamsize>(sizeof(int) * num_ids));
+        }
+
         // Load
         void Load(std::fstream& fin) {
             elements_ = std::vector<ElementType>();
@@ -88,6 +107,41 @@ namespace App
             sorted_ids_.resize(num_ids);
             fin.read(reinterpret_cast<char*>(sorted_ids_.data()), static_cast<std::streamsize>(sizeof(int) * num_ids));
         }
+
+    	void LoadVector(std::fstream& fin)
+        {
+            elements_ = std::vector<std::vector<int>>();
+            size_t num_ele;
+            fin.read(reinterpret_cast<char*>(&num_ele), static_cast<std::streamsize>(sizeof(size_t)));
+            size_t byte_size;
+            fin.read(reinterpret_cast<char*>(&byte_size), static_cast<std::streamsize>(sizeof(size_t)));
+        	
+            std::vector<std::vector<int>> tmp;
+            tmp.resize(num_ele);
+            fin.read(reinterpret_cast<char*>(tmp.data()), static_cast<std::streamsize>(byte_size));
+
+            for (int i = 0; i < num_ele; ++i)
+            {
+                elements_.push_back(tmp[i]);
+            }
+
+            sorted_ids_ = std::vector<int>();
+            size_t num_ids;
+            fin.read(reinterpret_cast<char*>(&num_ids), static_cast<std::streamsize>(sizeof(size_t)));
+            sorted_ids_.resize(num_ids);
+            fin.read(reinterpret_cast<char*>(sorted_ids_.data()), static_cast<std::streamsize>(sizeof(int) * num_ids));
+        }
+
+		std::vector<ElementType>& get_elements()
+        {
+            return elements_;
+        }
+
+    	std::vector<int>& get_ids()
+        {
+            return sorted_ids_;
+        }
+		
     private:
         std::vector<ElementType> elements_;
         std::vector<int>         sorted_ids_;
@@ -215,13 +269,13 @@ namespace App
         const NodeType& node(int node_id) const;
         Span<const int>  neighbors(int node_id) const;
         Span<const Edge> edges() const;
-
+    	
         void Save(std::fstream& fout) {
             // save nodes_
             fout.write(reinterpret_cast<const char*>(&current_id_), static_cast<std::streamsize>(sizeof(int)));
             nodes_.Save(fout);
             edges_from_node_.Save(fout);
-            node_neighbors_.Save(fout);
+            node_neighbors_.SaveVector(fout);
             edges_.Save(fout);
         }
 
@@ -230,7 +284,7 @@ namespace App
             fin.read(reinterpret_cast<char*>(&current_id_), static_cast<std::streamsize>(sizeof(int)));
             nodes_.Load(fin);
             edges_from_node_.Load(fin);
-            node_neighbors_.Load(fin);
+            node_neighbors_.LoadVector(fin);
             edges_.Load(fin);
         }
         // Capacity

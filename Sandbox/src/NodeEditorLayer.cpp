@@ -156,7 +156,7 @@ namespace App {
         fout.write(
             reinterpret_cast<const char*>(links_.data()),
             static_cast<std::streamsize>(sizeof(Link) * num_links));
-
+    	
         // copy the current_id to file
         fout.write(
             reinterpret_cast<const char*>(&current_id_), static_cast<std::streamsize>(sizeof(int)));

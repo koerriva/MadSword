@@ -720,10 +720,17 @@ namespace App
                 ImGui::End();
                 ImGui::PopStyleColor();
 
-                if (ImGui::IsKeyPressed(MadSword::Key::F5)) {
+                if (ImGui::IsKeyPressed(MadSword::Key::F5))
+                {
                     MS_TRACE("Save Editor Data...");
                     Save();
                 }
+
+            	if(ImGui::IsKeyPressed(MadSword::Key::F6))
+            	{
+                    MS_TRACE("Load Editor Data...");
+                    Load();
+            	}
             }
 
             void Save() {
@@ -739,8 +746,11 @@ namespace App
                 fout.write(reinterpret_cast<const char*>(&num_nodes),static_cast<std::streamsize>(sizeof(size_t)));
                 fout.write(reinterpret_cast<const char*>(nodes_.data()),static_cast<std::streamsize>(sizeof(UiNode) * num_nodes));
 
+                // Dump graph to file
+            	
                 graph_.Save(fout);
 
+            	// copy root_node_id
                 fout.write(reinterpret_cast<const char*>(&root_node_id_), static_cast<std::streamsize>(sizeof(int)));
             }
 
@@ -749,7 +759,6 @@ namespace App
                 ImNodes::LoadCurrentEditorStateFromIniFile("neural_editor.ini");
 
                 // Load our editor state into memory
-
                 std::fstream fin("neural_editor.bytes", std::ios_base::in | std::ios_base::binary);
 
                 if (!fin.is_open())
