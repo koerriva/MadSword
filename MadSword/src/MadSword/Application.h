@@ -10,6 +10,8 @@
 #include <MadSword/Renderer/Shader.h>
 #include <MadSword/Renderer/Buffer.h>
 #include <MadSword/Renderer/VertexArray.h>
+#include <MadSword/Renderer/OrthographicCamera.h>
+
 namespace MadSword {
 	class Application
 	{
@@ -38,6 +40,7 @@ namespace MadSword {
 		std::shared_ptr<VertexArray> m_VertexArray;
 
 		std::shared_ptr<VertexArray> m_SquadVA;
+		std::shared_ptr<OrthographicCamera> m_Camera;
 	private:
 		static Application* s_Instance;
 	};

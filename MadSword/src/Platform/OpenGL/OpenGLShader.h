@@ -6,10 +6,11 @@ namespace MadSword {
 	class OpenGLShader :public Shader {
 	public:
 		OpenGLShader(const std::string& vertSrc, const std::string& fragSrc);
-		virtual ~OpenGLShader();
+		~OpenGLShader() override;
 
-		virtual void Bind() override;
-		virtual void UnBind() override;
+		void Bind() override;
+		void UnBind() override;
+		void SetMat4(const std::string& name, const mat4& value) override;
 	private:
 		unsigned int m_RendererID;
 	};

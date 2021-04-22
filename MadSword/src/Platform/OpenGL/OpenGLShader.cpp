@@ -2,6 +2,8 @@
 #include "OpenGLShader.h"
 #include <glad/glad.h>
 
+#include "glm/gtc/type_ptr.hpp"
+
 namespace MadSword {
 	OpenGLShader::OpenGLShader(const std::string& vertSrc, const std::string& fragSrc)
 	{
@@ -119,5 +121,10 @@ namespace MadSword {
 	void OpenGLShader::UnBind()
 	{
 		glUseProgram(0);
+	}
+	void OpenGLShader::SetMat4(const std::string& name, const mat4& value)
+	{
+		const unsigned int location = glGetUniformLocation(m_RendererID, name.c_str());
+		glUniformMatrix4fv(location, 1, GL_FALSE,value_ptr(value));
 	}
 }
