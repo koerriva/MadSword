@@ -7,10 +7,6 @@
 #include <MadSword/LayerStack.h>
 
 #include "ImGui/ImGuiLayer.h"
-#include <MadSword/Renderer/Shader.h>
-#include <MadSword/Renderer/Buffer.h>
-#include <MadSword/Renderer/VertexArray.h>
-#include <MadSword/Renderer/OrthographicCamera.h>
 
 namespace MadSword {
 	class Application
@@ -24,8 +20,8 @@ namespace MadSword {
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* overlay);
 
-		static inline Application& Instance() { return *s_Instance; }
-		inline Window& GetWindow() { return *m_Window; }
+		static Application& Instance() { return *s_Instance; }
+		Window& GetWindow() { return *m_Window; }
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
 		std::unique_ptr<Window> m_Window;
