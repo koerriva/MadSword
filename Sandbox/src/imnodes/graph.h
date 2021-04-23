@@ -255,12 +255,13 @@ namespace App
         {
             int id;
             int from, to;
+            float weight;
 
             Edge() = default;
-            Edge(const int id, const int f, const int t) : id(id), from(f), to(t) {}
+            Edge(const int id, const int f, const int t) : id(id), from(f), to(t), weight(1.0f) {}
 
-            inline int  opposite(const int n) const { return n == from ? to : from; }
-            inline bool contains(const int n) const { return n == from || n == to; }
+            int  opposite(const int n) const { return n == from ? to : from; }
+            bool contains(const int n) const { return n == from || n == to; }
         };
 
         // Element access

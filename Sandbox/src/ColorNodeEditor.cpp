@@ -36,12 +36,13 @@ namespace App
             NodeType type;
             float    value;
             float    weight;
+            int      synapse[8] = {0};
 
-            Node() :type(NodeType::value), value(0.f), weight(0.f) {}
+            Node() :type(NodeType::value), value(0.0f), weight(1.0f) {}
 
-            Node(const NodeType t) : type(t), value(0.f), weight(0.f) {}
+            Node(const NodeType t) : type(t), value(0.0f), weight(1.0f) {}
 
-            Node(const NodeType t, const float v) : type(t), value(v), weight(0.f) {}
+            Node(const NodeType t, const float v) : type(t), value(v), weight(1.0f) {}
 
             Node(const NodeType t, const float v, const float w) :type(t), value(v), weight(w) {}
         };
@@ -61,7 +62,7 @@ namespace App
             dfs_traverse(
                 graph, root_node, [&postorder](const int node_id) -> void { postorder.push(node_id); });
 
-            std::stack<std::pair<float,float>> value_stack;
+            std::stack<float> value_stack;
             while (!postorder.empty())
             {
                 const int id = postorder.top();
@@ -71,39 +72,39 @@ namespace App
                 {
                 case NodeType::add:
                 {
-                    const auto [rhs,rw] = value_stack.top();
+                    const auto rhs = value_stack.top();
                     value_stack.pop();
-                    const auto [lhs,lw] = value_stack.top();
+                    const auto lhs = value_stack.top();
                     value_stack.pop();
-                    value_stack.push(std::make_pair(lhs + rhs, node.weight));
+                    value_stack.push(lhs + rhs);
                 }
                 break;
                 case NodeType::multiply:
                 {
-                    const auto [rhs, rw] = value_stack.top();
+                    const auto rhs = value_stack.top();
                     value_stack.pop();
-                    const auto [lhs, lw] = value_stack.top();
+                    const auto lhs = value_stack.top();
                     value_stack.pop();
-                    value_stack.push(std::make_pair(lhs + rhs, node.weight));
+                    value_stack.push(lhs + rhs);
                 }
                 break;
                 case NodeType::sine:
                 {
-                    const auto [x,w] = value_stack.top();
+                    const auto x = value_stack.top();
                     value_stack.pop();
                     const float res = std::abs(std::sin(x));
-                    value_stack.push(std::make_pair(res,node.weight));
+                    value_stack.push(res);
                 }
                 break;
                 case NodeType::time:
                 {
-                    value_stack.push(std::make_pair(current_time_seconds,node.weight));
+                    value_stack.push(current_time_seconds);
                 }
                 break;
                 case NodeType::input:
                 {
                     const float in = node.value;
-                    value_stack.push(std::make_pair(in,node.weight));
+                    value_stack.push(in);
                 }
                 break;
                 case NodeType::neural:
@@ -111,14 +112,17 @@ namespace App
                 	
 	                const size_t len = 8;
                     float output = 0.0f;
+                	
                     for (size_t i = 0; i < len; i++)
                     {
-                        const auto [x,w] = value_stack.top();
+                        const auto x = value_stack.top();
                         value_stack.pop();
 
-                        output += 1 * w;
+                        const Node& synapse = graph.node(node.synapse[len-i-1]);
+                    	
+                        output += x * synapse.weight;
                     }
-                    value_stack.push(std::make_pair(output,node.weight));
+                    value_stack.push(output);
                 }
                 break;
                 case NodeType::value:
@@ -128,7 +132,7 @@ namespace App
                     // the value comes from the node's UI.
                     if (graph.num_edges_from_node(id) == 0ull)
                     {
-                        value_stack.push(std::make_pair(node.value,node.weight));
+                        value_stack.push(node.value);
                     }
                 }
                 break;
@@ -140,11 +144,11 @@ namespace App
             // The final output node isn't evaluated in the loop -- instead we just pop
             // the three values which should be in the stack.
             assert(value_stack.size() == 3ull);
-            const int b = static_cast<int>(clamp(value_stack.top().first, 0.f, 1.f) * 255.f + 0.5f);
+            const int b = static_cast<int>(clamp(value_stack.top(), 0.f, 1.f) * 255.f + 0.5f);
             value_stack.pop();
-            const int g = static_cast<int>(clamp(value_stack.top().first, 0.f, 1.f) * 255.f + 0.5f);
+            const int g = static_cast<int>(clamp(value_stack.top(), 0.f, 1.f) * 255.f + 0.5f);
             value_stack.pop();
-            const int r = static_cast<int>(clamp(value_stack.top().first, 0.f, 1.f) * 255.f + 0.5f);
+            const int r = static_cast<int>(clamp(value_stack.top(), 0.f, 1.f) * 255.f + 0.5f);
             value_stack.pop();
 
             return IM_COL32(r, g, b, 255);
@@ -293,7 +297,7 @@ namespace App
                         if (ImGui::MenuItem("neural"))
                         {
                             const Node value(NodeType::value);
-                            const Node op(NodeType::neural);
+                            Node op(NodeType::neural);
 
                             UiNode ui_node;
                             ui_node.type = UiNodeType::neural;
@@ -301,8 +305,10 @@ namespace App
                             size_t len = sizeof(ui_node.neural.synapse) / sizeof(int);
                             for (size_t i = 0; i < len; i++)
                             {
-                                ui_node.neural.synapse[i] = graph_.insert_node(value);
+                                int synapseId = graph_.insert_node(value);
+                                ui_node.neural.synapse[i] = synapseId;
                                 ui_node.neural.synapse_weight[i] = 0;
+                                op.synapse[i] = synapseId;
                             }
                             
                             ui_node.id = graph_.insert_node(op);

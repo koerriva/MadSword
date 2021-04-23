@@ -160,7 +160,7 @@ public:
 
 		PushLayer(new NodeEditorLayer());
 
-		PushLayer(new ExampleLayer());
+		//PushLayer(new ExampleLayer());
 	}
 
 	~Sandbox() override {
