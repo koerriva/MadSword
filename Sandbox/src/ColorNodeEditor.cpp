@@ -28,7 +28,8 @@ namespace App
             time,
             value,
             input,
-            neural
+            neural,
+        	neural_out,
         };
 
         struct Node
@@ -36,7 +37,8 @@ namespace App
             NodeType type;
             float    value;
             float    weight;
-            int      synapse[8] = {0};
+            int      synapse[8] = { 0 };
+            int      output[2] = { 0 };
 
             Node() :type(NodeType::value), value(0.0f), weight(1.0f) {}
 
@@ -122,9 +124,19 @@ namespace App
                     	
                         output += x * synapse.weight;
                     }
-                    value_stack.push(output);
+
+	                for (int i = 0; i < 2; ++i)
+	                {
+                        value_stack.push(output);
+	                }
+                    
                 }
                 break;
+                case NodeType::neural_out:
+	            {
+                    //const auto x = value_stack.top();
+                    value_stack.pop();
+                }break;
                 case NodeType::value:
                 {
                     // If the edge does not have an edge connecting to another node, then just use the value
@@ -297,6 +309,7 @@ namespace App
                         if (ImGui::MenuItem("neural"))
                         {
                             const Node value(NodeType::value);
+                            const Node out(NodeType::neural_out);
                             Node op(NodeType::neural);
 
                             UiNode ui_node;
@@ -310,13 +323,29 @@ namespace App
                                 ui_node.neural.synapse_weight[i] = 0;
                                 op.synapse[i] = synapseId;
                             }
+                        	
+                        	for (size_t i=0;i<2;i++)
+                        	{
+                                int outId = graph_.insert_node(out);
+                                ui_node.neural.output[i] = outId;
+                                op.output[i] = outId;
+                        	}
                             
                             ui_node.id = graph_.insert_node(op);
 
-                            for (size_t i = 0; i < len; i++)
+                            for (size_t i = 0; i < len; ++i)
                             {
-                                graph_.insert_edge(ui_node.id, ui_node.neural.synapse[i]);
+                                int from = ui_node.id;
+                                int to = op.synapse[i];
+                                graph_.insert_edge(from, to);
                             }
+
+                        	for (size_t i=0;i<2;i++)
+                        	{
+                                int from = op.output[i];
+                                int to = ui_node.id;
+                                graph_.insert_edge(from, to);
+                        	}
                             
                             nodes_.push_back(ui_node);
                             ImNodes::SetNodeScreenSpacePos(ui_node.id, click_pos);
@@ -590,11 +619,12 @@ namespace App
                         ImNodes::EndNodeTitleBar();
 
                         {
+                            const float label_width = ImGui::CalcTextSize("synapse").x;
+                        	
                             size_t len = sizeof(node.neural.synapse) / sizeof(int);
                             for (size_t i = 0; i < len; i++)
                             {
                                 ImNodes::BeginInputAttribute(node.neural.synapse[i]);
-                                const float label_width = ImGui::CalcTextSize("synapse").x;
                                 ImGui::Text("synapse %d", i);
                                 //if (graph_.num_edges_from_node(node.neural.synapse[i]) == 0ull)
                                 //{
@@ -615,11 +645,16 @@ namespace App
                         ImGui::Spacing();
 
                         {
-                            ImNodes::BeginOutputAttribute(node.id);
                             const float label_width = ImGui::CalcTextSize("output").x;
-                            ImGui::Indent(node_width - label_width);
-                            ImGui::TextUnformatted("output");
-                            ImNodes::EndInputAttribute();
+
+                            size_t len = sizeof(node.neural.output) / sizeof(int);
+                            for (size_t i = 0; i < len; ++i)
+                            {
+                                ImNodes::BeginOutputAttribute(node.neural.output[i]);
+                                ImGui::Indent(node_width - label_width);
+                                ImGui::Text("output %d",i);
+                                ImNodes::EndInputAttribute();
+                            }
                         }
 
                         ImNodes::EndNode();
@@ -854,6 +889,7 @@ namespace App
                     struct
                     {
                         int synapse[8];
+                        int output[2];
                         float synapse_weight[8];
                         float weight;
                     } neural;
