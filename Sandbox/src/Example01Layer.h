@@ -9,7 +9,7 @@ namespace Example
 		Example01Layer() :Layer("Example01Layer") {}
 
 		void OnAttach() override;
-		void OnUpdate() override;
+		void OnUpdate(MadSword::Timestep deltaTime) override;
 		void OnEvent(MadSword::Event& e) override;
 	};
 }

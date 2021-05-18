@@ -10,7 +10,7 @@ namespace MadSword {
 		~ImGuiLayer();
 		void OnAttach() override;
 		void OnDeAttach() override;
-		void OnUpdate() override;
+		void OnUpdate(Timestep deltaTime) override;
 		void OnEvent(Event& e) override;
 
 		void OnImGuiRender() override;

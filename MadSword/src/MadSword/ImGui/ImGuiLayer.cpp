@@ -73,7 +73,7 @@ namespace MadSword {
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
 	}
-	void ImGuiLayer::OnUpdate()
+	void ImGuiLayer::OnUpdate(Timestep deltaTime)
 	{
 	}
 	void ImGuiLayer::OnEvent(Event& event)

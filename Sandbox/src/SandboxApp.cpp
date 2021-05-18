@@ -5,7 +5,7 @@
 class DebugLayer : public MadSword::Layer {
 public:
 	DebugLayer():Layer("DebugLayer"){}
-	void OnUpdate() override {
+	void OnUpdate(MadSword::Timestep deltaTime) override {
 		//MS_TRACE("DebugLayer:Update");
 	}
 
@@ -83,10 +83,11 @@ public:
 		m_Shader.reset(MadSword::Shader::Create(vert, frag));
 	}
 
-	float t = 0.0f;
-	void OnUpdate() override
+	float t = 0;
+	void OnUpdate(MadSword::Timestep deltaTime) override
 	{
-		t++;
+		t += deltaTime;
+		MS_TRACE("delta {}", deltaTime);
 		{
 			MadSword::RenderCommand::SetClearColor({ 0.2f, 0.3f, 0.1f, 1.0f });
 			MadSword::RenderCommand::Clear();
@@ -158,9 +159,11 @@ public:
 	Sandbox() {
 		MS_INFO("Sandbox startup");
 
-		PushLayer(new NodeEditorLayer());
+		//PushLayer(new NodeEditorLayer());
 
-		//PushLayer(new ExampleLayer());
+		PushLayer(new DebugLayer());
+
+		PushLayer(new ExampleLayer());
 	}
 
 	~Sandbox() override {

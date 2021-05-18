@@ -4,6 +4,8 @@
 #include "MadSword/Layer.h"
 #include "MadSword/Log.h"
 
+#include "MadSword/Core/Timestep.h"
+
 // Inpput
 #include "MadSword/Input.h"
 #include "MadSword/KeyCodes.h"

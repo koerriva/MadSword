@@ -6,6 +6,8 @@
 #include "Window.h"
 #include <MadSword/LayerStack.h>
 
+#include <MadSword/Core/Timestep.h>
+
 #include "ImGui/ImGuiLayer.h"
 
 namespace MadSword {
@@ -29,6 +31,8 @@ namespace MadSword {
 		ImGuiLayer* m_ImGuiLayer;
 
 		LayerStack m_LayerStack;
+
+		float m_LastFrameTime = 0.0f;
 	private:
 		static Application* s_Instance;
 	};

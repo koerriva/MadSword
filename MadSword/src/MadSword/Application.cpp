@@ -16,10 +16,15 @@ namespace MadSword {
 	Application::~Application() = default;
 
 	void Application::Run() {
+		Timer frameTimer;
 		while (m_Running) {
+			float time = frameTimer.GetLasTime();
+			Timestep t = time - m_LastFrameTime;
+			m_LastFrameTime = time;
+			
 			for each (Layer * layer in m_LayerStack)
 			{
-				layer->OnUpdate();
+				layer->OnUpdate(t);
 			}
 
 			m_ImGuiLayer->Begin();
