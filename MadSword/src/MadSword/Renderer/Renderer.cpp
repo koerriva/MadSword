@@ -2,6 +2,7 @@
 
 #include "Renderer.h"
 #include "RenderCommand.h"
+#include "Platform/OpenGL/OpenGLShader.h"
 
 namespace MadSword {
 	Renderer::SceneData* Renderer::m_ScaneData = new SceneData();
@@ -21,8 +22,8 @@ namespace MadSword {
 	{
 		OrthographicCamera* camera = m_ScaneData->camera;
 		shader->Bind();
-		shader->SetMat4("VP", camera->GetViewProjectionMatrix());
-		shader->SetMat4("M", transform);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->SetMat4("VP", camera->GetViewProjectionMatrix());
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->SetMat4("M", transform);
 		RenderCommand::DrawIndexed(vertexArray);
 	}
 

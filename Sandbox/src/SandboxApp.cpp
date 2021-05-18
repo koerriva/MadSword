@@ -1,5 +1,6 @@
 #include "SandboxApp.h"
 
+#include "glm/gtc/type_ptr.inl"
 #include "MadSword/Renderer/Renderer.h"
 
 class DebugLayer : public MadSword::Layer {
@@ -14,11 +15,7 @@ public:
 	}
 
 	void OnImGuiRender() override {
-		ImGuiContext* ctx = ImGui::GetCurrentContext();
-		static bool show = true;
-		ImGui::Begin(u8"²âÊÔ",&show,ImGuiWindowFlags_DockNodeHost);
-		ImGui::Text(u8"Hello wrold!ÄãºÃÊÀ½ç!");
-		ImGui::End();
+		
 	}
 };
 
@@ -89,14 +86,12 @@ public:
 		t += deltaTime;
 		//MS_TRACE("delta {}", deltaTime);
 		{
-			MadSword::RenderCommand::SetClearColor({ 0.2f, 0.3f, 0.1f, 1.0f });
+			MadSword::RenderCommand::SetClearColor(bgColor);
 			MadSword::RenderCommand::Clear();
 
 			m_Camera->SetPosition(vec3(0.0f, 0.0f, -1.0f));
 			m_Camera->SetRotation(vec3(0.0f, 0.0f, abs(sin(t))));
-			m_Camera->SetScale(clamp(vec3(1.0 + wheel_y * deltaTime),vec3(0.8f),vec3(1.5f)));
-
-			if(MadSword::Input::GetMouseX())
+			m_Camera->SetScale(clamp(vec3(1.0f + wheel_y * deltaTime),vec3(0.8f),vec3(1.0f)));
 
 			MadSword::Renderer::BeginScene(m_Camera);
 
@@ -107,11 +102,21 @@ public:
 					mat4 s = scale(mat4(1.0), vec3(x*y / 100.0f));
 					mat4 transform = translate(mat4(1.0), vec3(x*0.1f, y*0.1f, 0));
 					MadSword::Renderer::Submit(m_Shader, m_SquadVA, transform * s);
-				}	
+				}
 			}
 			
 			MadSword::Renderer::EndScene();
 		}
+	}
+
+	void OnImGuiRender() override
+	{
+		ImGuiContext* ctx = ImGui::GetCurrentContext();
+		static bool show = true;
+		ImGui::Begin(u8"²âÊÔ", &show, ImGuiWindowFlags_DockNodeHost);
+		ImGui::Text(u8"----------");
+		ImGui::ColorEdit4(u8"±³¾°É«", value_ptr(bgColor));
+		ImGui::End();
 	}
 
 	void OnEvent(MadSword::Event& e) override
@@ -135,7 +140,8 @@ private:
 	std::shared_ptr<MadSword::VertexArray> m_SquadVA;
 	std::shared_ptr<MadSword::OrthographicCamera> m_Camera;
 
-	float wheel_y = 1.0;
+	float wheel_y = 0;
+	vec4 bgColor=vec4(0.2f,0.3f,0.1f,1.0f);
 };
 
 class NodeEditorLayer : public MadSword::Layer {
@@ -184,7 +190,7 @@ public:
 
 		//PushLayer(new NodeEditorLayer());
 
-		PushLayer(new DebugLayer());
+		//PushLayer(new DebugLayer());
 
 		PushLayer(new ExampleLayer());
 	}
