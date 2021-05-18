@@ -11,5 +11,6 @@ namespace MadSword {
 		virtual std::pair<float, float> GetMousePosImpl() override;
 		virtual float GetMouseXImpl() override;
 		virtual float GetMouseYImpl() override;
+		virtual float GetMouseWheelImpl() override;
 	};
 }

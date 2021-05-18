@@ -16,11 +16,13 @@ namespace MadSword {
 	}
 
 	void Renderer::Submit(const std::shared_ptr<Shader>& shader,
-		const std::shared_ptr<VertexArray>& vertexArray)
+		const std::shared_ptr<VertexArray>& vertexArray,
+		const mat4& transform)
 	{
 		OrthographicCamera* camera = m_ScaneData->camera;
 		shader->Bind();
 		shader->SetMat4("VP", camera->GetViewProjectionMatrix());
+		shader->SetMat4("M", transform);
 		RenderCommand::DrawIndexed(vertexArray);
 	}
 

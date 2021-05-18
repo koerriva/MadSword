@@ -41,5 +41,12 @@ namespace MadSword {
 		return y;
 	}
 
+	float WindowsInput::GetMouseWheelImpl()
+	{
+		GLFWwindow* glfw_handle = static_cast<GLFWwindow*>(Application::Instance().GetWindow().GetNativeWindow());
+		
+		return 0.0f;
+	}
+
 
 }

@@ -9,7 +9,9 @@ namespace MadSword {
 		static void BeginScene(std::shared_ptr<OrthographicCamera>& camera);
 		static void EndScene();
 
-		static void Submit(const std::shared_ptr<Shader>& shader,const std::shared_ptr<VertexArray>& vertexArray);
+		static void Submit(const std::shared_ptr<Shader>& shader, 
+			const std::shared_ptr<VertexArray>& vertexArray,
+			const mat4& transform = mat4(1.0f));
 		
 		static RendererAPI::API GetAPI() { return RendererAPI::Type(); }
 	private:

@@ -19,12 +19,18 @@ namespace MadSword
 		m_Rotation = rotation;
 		Update();
 	}
+	void OrthographicCamera::SetScale(glm::vec3& scale)
+	{
+		m_Scale = scale;
+		Update();
+	}
 	void OrthographicCamera::Update()
 	{
 		mat4 transform = translate(mat4(1.0), m_Position) *
 			rotate(mat4(1.0), m_Rotation.x, vec3(1, 0, 0)) *
 			rotate(mat4(1.0), m_Rotation.y, vec3(0, 1, 0)) *
-			rotate(mat4(1.0), m_Rotation.z, vec3(0, 0, 1));
+			rotate(mat4(1.0), m_Rotation.z, vec3(0, 0, 1)) *
+			scale(mat4(1.0), m_Scale);
 		
 		m_View = inverse(transform);
 		//m_View = lookAt(m_Position, vec3(0.0f), glm::vec3(0.f, 1.0f, 0.0f));

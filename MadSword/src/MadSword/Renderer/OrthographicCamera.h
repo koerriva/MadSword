@@ -15,6 +15,8 @@ namespace MadSword
 		const glm::vec3& GetPosition() const { return m_Position; }
 		void SetRotation(glm::vec3& rotation);
 		const glm::vec3& GetRotation() const { return m_Rotation; }
+		void SetScale(glm::vec3& scale);
+		const glm::vec3& GetScale() const { return m_Scale; }
 
 		const glm::mat4& GetProjectionMatrix() const { return m_Projection; }
 		const glm::mat4& GetViewMatrix() const { return m_View; }
@@ -28,6 +30,7 @@ namespace MadSword
 		
 		glm::vec3 m_Position;
 		glm::vec3 m_Rotation;
+		glm::vec3 m_Scale;
 		
 	};
 }

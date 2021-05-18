@@ -67,7 +67,7 @@ public:
 			void main(){
 				v_Color = color;
 				v_Pos = position;
-				gl_Position = VP * vec4(position,1.0);
+				gl_Position = VP * M * vec4(position,1.0);
 			}
 		)";
 		const std::string frag = R"(
@@ -87,23 +87,44 @@ public:
 	void OnUpdate(MadSword::Timestep deltaTime) override
 	{
 		t += deltaTime;
-		MS_TRACE("delta {}", deltaTime);
+		//MS_TRACE("delta {}", deltaTime);
 		{
 			MadSword::RenderCommand::SetClearColor({ 0.2f, 0.3f, 0.1f, 1.0f });
 			MadSword::RenderCommand::Clear();
 
 			m_Camera->SetPosition(vec3(0.0f, 0.0f, -1.0f));
 			m_Camera->SetRotation(vec3(0.0f, 0.0f, abs(sin(t))));
+			m_Camera->SetScale(clamp(vec3(1.0 + wheel_y * deltaTime),vec3(0.8f),vec3(1.5f)));
+
+			if(MadSword::Input::GetMouseX())
 
 			MadSword::Renderer::BeginScene(m_Camera);
-			MadSword::Renderer::Submit(m_Shader, m_SquadVA);
+
+			for (int y = -10; y < 10; ++y)
+			{
+				for (int x = -10; x < 10; ++x)
+				{
+					mat4 s = scale(mat4(1.0), vec3(x*y / 100.0f));
+					mat4 transform = translate(mat4(1.0), vec3(x*0.1f, y*0.1f, 0));
+					MadSword::Renderer::Submit(m_Shader, m_SquadVA, transform * s);
+				}	
+			}
+			
 			MadSword::Renderer::EndScene();
 		}
 	}
 
 	void OnEvent(MadSword::Event& e) override
 	{
-		
+		MadSword::EventDispatcher dispatcher(e);
+		dispatcher.Dispatch<MadSword::MouseScrolledEvent>(MS_BIND_EVENT_FN(ExampleLayer::OnWheelScrool));
+	}
+
+	bool OnWheelScrool(MadSword::MouseScrolledEvent& e)
+	{
+		MS_TRACE("e {}", e);
+		wheel_y += e.GetY();
+		return true;
 	}
 private:
 	std::shared_ptr<MadSword::Shader> m_Shader;
@@ -113,6 +134,8 @@ private:
 
 	std::shared_ptr<MadSword::VertexArray> m_SquadVA;
 	std::shared_ptr<MadSword::OrthographicCamera> m_Camera;
+
+	float wheel_y = 1.0;
 };
 
 class NodeEditorLayer : public MadSword::Layer {
